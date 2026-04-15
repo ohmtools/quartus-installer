@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Quartus Prime Lite
+Comment=FPGA Design Software
+Exec=
+Icon=
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=Development;Electronics;
+MimeType=application/x-quartus-bdf;
