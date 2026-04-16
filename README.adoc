@@ -45,11 +45,13 @@ Wenn du in Quartus simulierst, denk dran, immer `+-suppress 12110+` in den Simul
 
 Führe folgende Befehle in einem neuen Host-Konsolenfenster aus:
 
-  distrobox rm quartus-prime-lite-ubuntu
+  distrobox rm -f quartus-prime-lite-ubuntu
+
+  chmod -R +w ~/.local/share/quartus-prime-lite-ubuntu
 
   rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
 
-Grafisch kann man auch in Distroshelf das Programm entfernen. Das ersetzt den ersten Befehl, aber den Zweiten (`rm ...`) muss man trotzdem ausführen.
+Grafisch kann man auch in Distroshelf das Programm entfernen. Das ersetzt den ersten Befehl, aber die anderen Zwei (`rm ...`) muss man trotzdem in einer Konsole ausführen.
 
 == Entwicklung in diesem Repository
 
