@@ -6,7 +6,7 @@
 
 * *⚠️  MINDESTENS 35GB SPEICHERPLATZ*
 * `distrobox`
-  https://distrobox.it/#installation  (Am besten über Paketmanager der jeweiligen Distribution installieren)
+  https://distrobox.it/#installation  (Am besten über den Paketmanager der jeweiligen Distribution installieren; Falls eine Auswahl auftaucht, in der `podman` zur Wahl steht, `podman` auswählen)
 * Optional (Grafischer Distrobox Manager): https://flathub.org/en/apps/com.ranfdev.DistroShelf
 
 :ini-link: https://codeberg.org/tobilinz/quartus-prime-lite-installer/raw/branch/main/distrobox.ini
