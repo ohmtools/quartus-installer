@@ -7,6 +7,12 @@ build:
 assemble:
   distrobox assemble create --file distrobox-local.ini
 
+[no-cd]
+rebuild:
+  ./container/uninstall
+  podman build -t quartus-prime-lite-installer:local ./container
+  distrobox assemble create --file distrobox-local.ini
+
 push-cicd version:
   podman manifest rm quartus-prime-lite-installer-cicd:latest || true
   podman manifest create quartus-prime-lite-installer-cicd:latest

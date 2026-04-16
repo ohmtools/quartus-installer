@@ -4,22 +4,20 @@ set -euo pipefail
 error_handler() {
   echo ""
   echo ""
-  echo "------------------------------------------"
+  echo "-------------------------------------------"
   echo "Ein Fehler ist aufgetreten."
-  echo "------------------------------------------"
+  echo "-------------------------------------------"
   echo ""
 }
 
 exit_handler() {
   echo ""
   echo ""
-  echo "------------------------------------------"
+  echo "-------------------------------------------"
   echo "Dieses Programm wurde beendet."
   echo "Du kannst es erneut ausführen, indem du"
-  echo "quartus-install in das Terminal eingibst."
-  echo "Evtl. musst du zuerst folgendes eingeben:"
-  echo "distrobox enter quartus-prime-lite-ubuntu"
-  echo "------------------------------------------"
+  echo "'quartus-install' in das Terminal eingibst."
+  echo "-------------------------------------------"
   echo ""
 }
 
@@ -35,9 +33,9 @@ mkdir -p "$QUARTUS_CACHE"
 mkdir -p "$QUARTUS_SHARE"
 
 echo ""
-echo "------------------------------------------"
+echo "---------------------------------------------"
 echo "INSTALLATIONSHILFE"
-echo "------------------------------------------"
+echo "---------------------------------------------"
 echo ""
 
 INSTALLER_FILE="$HOME/.cache/quartus-prime-lite-installer"
@@ -72,7 +70,7 @@ if [ "$SHOULD_DOWNLOAD" = "ja" ]; then
 
   cd "$HOME_DIR" 2>/dev/null || true
 
-  DOWNLOADED_INSTALLER_PATH="$(zenity --file-selection --title="Installer wählen" --filename "$ZENITY_DIR/installer.run" --file-filter="*.run" 2>/dev/null)" || {
+  DOWNLOADED_INSTALLER_PATH="$(zenity --file-selection --filename "$ZENITY_DIR/installer.run" --file-filter="*.run" 2>/dev/null)" || {
     echo "Keine Datei ausgewählt."
     exit 1
   }
@@ -95,7 +93,6 @@ INSTALLER=("$INSTALLER_FILE" --quiet --)
 COMPONENT_LIST="$("${INSTALLER[@]}" --help | awk '/--components arg/{found=1} found{print; if(NF==0 || (found>1 && /^  --/)) exit; found++}' | head -n -1 | sed 's/^[[:space:]]*//' | tail -n +3)"
 
 echo "Welche Komponenten willst du installieren?"
-echo "Wichtig: Auf Groß- und Kleinschreibung achten!"
 echo ""
 echo "Verfügbare Komponenten:"
 echo "$COMPONENT_LIST"
@@ -106,7 +103,7 @@ if [ -z "$COMPONENTS" ]; then
   COMPONENTS="$(echo "$COMPONENT_LIST" | grep -E "^Default (components|devices):" | sed 's/Default [^:]*: //' | paste -sd ',')"
 fi
 
-COMPONENTS="${COMPONENTS// /}"
+COMPONENTS="$(echo "$COMPONENTS" | tr -d ' ' | tr '[:upper:]' '[:lower:]')"
 
 if [ -z "$COMPONENTS" ]; then
   echo "Fehler: Keine Komponenten ausgewählt oder gefunden." >&2
@@ -122,8 +119,4 @@ fi
 distrobox-export --app quartus >/dev/null
 
 echo ""
-echo "------------------------------------------"
-echo "FERTIG"
-echo "Bitte schließe dieses Konsolenfenster."
-echo "------------------------------------------"
-echo ""
+echo "Fertig."

@@ -7,25 +7,11 @@
 * *⚠️  MINDESTENS 35GB SPEICHERPLATZ*
 * `distrobox`
   https://distrobox.it/#installation  (Am besten über den Paketmanager der jeweiligen Distribution installieren; Falls eine Auswahl auftaucht, in der `podman` zur Wahl steht, `podman` auswählen)
-* Optional (Grafischer Distrobox Manager): https://flathub.org/en/apps/com.ranfdev.DistroShelf
-
-:ini-link: https://codeberg.org/tobilinz/quartus-prime-lite-installer/raw/branch/main/distrobox.ini
 
 === Konsole
 
-. `+distrobox assemble create --file "+{ini-link}+"+`
-. `+distrobox enter quartus-prime-lite-ubuntu+` und ein paar Minuten warten
-. Den Anweisungen folgen
-
-=== Grafisch
-
-. Distroshelf öffnen
-. Neue Distrobox hinzufügen (In der oberen, linken Ecke des Fensters auf das Plus clicken)
-. `From URL` / `Von URL` Tab
-. Den Link `{ini-link}` einfügen 
-. Distrobox erstellen
-. Im Hauptfenter links `+quartus-prime-lite-ubuntu+` auswählen
-. Im Hauptfenster oben den Tab `Terminal` auswählen und ein paar Minuten warten
+. `+distrobox assemble create --file "https://codeberg.org/tobilinz/quartus-prime-lite-installer/raw/branch/main/distrobox.ini"+`
+. `quartus-install`
 . Den Anweisungen folgen
 
 === Optional: MIME-Unterstützung
@@ -33,7 +19,7 @@
 Mit MIME-Unterstützung kannst du `.bdf` Dateien mit einem Doppelklick in Quartus öffnen.
 Das funktioniert erst, wenn du Quartus erfolgreich installiert hast.
 
-Führe folgenden Befehl in einem *neuen* Host-Konsolenfenster aus:
+Führe folgenden Befehl in einem Host-Konsolenfenster aus:
 
   $HOME/.local/share/quartus-prime-lite-ubuntu/mime-install
 
@@ -43,7 +29,7 @@ Wenn du in Quartus simulierst, denk dran, immer `-suppress 12110` in den Simulat
 
 == Deinstallation
 
-Führe folgenden Befehl in einem *neuen* Host-Konsolenfenster aus:
+Führe folgenden Befehl in einem Host-Konsolenfenster aus:
 
   $HOME/.local/share/quartus-prime-lite-ubuntu/uninstall
 
