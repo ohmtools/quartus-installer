@@ -5,7 +5,7 @@ build:
   podman build -t quartus-prime-lite-ubuntu ./container
 
 assemble:
-  distrobox assemble create --file distrobox.ini
+  distrobox assemble create --file distrobox-local.ini
 
 push-cicd version:
   podman manifest rm quartus-prime-lite-installer-cicd:latest || true
