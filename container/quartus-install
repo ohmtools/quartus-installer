@@ -90,32 +90,10 @@ fi
 
 chmod +x "$INSTALLER_FILE"
 
-INSTALLER=("$INSTALLER_FILE" --quiet --)
+echo "Installiere Quartus im Fenster, das sich geöffnet hat."
 
-COMPONENT_LIST="$("${INSTALLER[@]}" --help | awk '/--components arg/{found=1} found{print; if(NF==0 || (found>1 && /^  --/)) exit; found++}' | head -n -1 | sed 's/^[[:space:]]*//' | tail -n +3)"
-
-echo "Gib an, welche Komponenten Quartus du installieren willst."
-echo "Verfügbare Komponenten:"
-echo "$COMPONENT_LIST"
-read -rp "Eingabe (Komma-Getrennt): " COMPONENTS
-echo ""
-
-if [ -z "$COMPONENTS" ]; then
-  COMPONENTS="$(echo "$COMPONENT_LIST" | grep -E "^Default (components|devices):" | sed 's/Default [^:]*: //' | paste -sd ',')"
-fi
-
-COMPONENTS="${COMPONENTS// /}"
-
-if [ -z "$COMPONENTS" ]; then
-  echo "Fehler: Keine Komponenten ausgewählt oder gefunden." >&2
-  echo "Originaler help output (--components Sektion ist relevant):"
-  echo "$("${INSTALLER[@]}" --help)"
-  exit 1
-fi
-
-"${INSTALLER[@]}" --bypass --cli --delete-downloads --accept-eula \
-  --download-dir "$QUARTUS_CACHE" --install-dir "$QUARTUS_SHARE" \
-  --components "$COMPONENTS"
+"$INSTALLER_FILE" --quiet -- --bypass --delete-downloads --accept-eula \
+  --download-dir "$QUARTUS_CACHE" --install-dir "$QUARTUS_SHARE"
 
 distrobox-export --app quartus >/dev/null
 

@@ -15,7 +15,7 @@ trap 'rm -f -- "$0"' EXIT
 echo "Deinstalliere..."
 echo ""
 
-distrobox rm -f quartus-prime-lite-ubuntu
+distrobox rm -f quartus-prime-lite-ubuntu 2>/dev/null
 
 chmod -R +w ~/.local/share/quartus-prime-lite-ubuntu
 rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
