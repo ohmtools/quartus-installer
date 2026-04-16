@@ -1,5 +1,6 @@
 FROM quay.io/toolbx/ubuntu-toolbox:24.04
 
+# Forgejo Next
 LABEL org.opencontainers.image.source="https://codeberg.org/tobilinz/quartus-prime-lite-installer"
 LABEL org.opencontainers.image.description="Quartus prime lite package for a semi-automated install"
 

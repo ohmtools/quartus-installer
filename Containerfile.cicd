@@ -1,0 +1,7 @@
+FROM quay.io/podman/stable:latest
+
+RUN dnf install -y \
+    git \
+    curl \
+    nodejs \
+    && dnf clean all

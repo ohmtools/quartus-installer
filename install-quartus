@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo ""
-echo ""
-echo "Bitte diesen Optionalen Block erst am Ende des Installationsprozesses befolgen."
-echo "Optional: Wenn du MIME-Unterstützung willst, folge diesen Schritten:"
-echo "1. Schließe dieses Konsolenfenster und öffne ein Neues (auf dem Host System)"
-echo "2. Führe '~/.local/share/quartus-prime-lite-ubuntu/install-bdf-mime' aus"
-echo ""
-
 error_handler() {
   echo ""
   echo ""
@@ -126,10 +118,6 @@ fi
 distrobox-export --app quartus >/dev/null
 
 echo -e "export ICON_FILE=$ICON_FILE\nexport MIME_FILE=$MIME_FILE" >~/.config/bdf-mime-vars
-
-echo "Optional: Wenn du MIME-Unterstützung willst, folge diesen Schritten:"
-echo "1. Schließe dieses Konsolenfenster und öffne ein Neues (auf dem Host System)"
-echo "2. Führe '~/.local/share/quartus-prime-lite-ubuntu/install-bdf-mime' aus"
 
 echo ""
 echo "------------------------------------------"

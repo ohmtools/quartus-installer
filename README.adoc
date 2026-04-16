@@ -1,0 +1,61 @@
+= Quartus Prime Lite Installer
+
+== Installation
+
+⚠️  MINDESTENS 35GB SPEICHERPLATZ BENÖTIGT
+
+=== Systemanforderungen
+
+* distrobox 
+  https://distrobox.it/#installation  (Am besten über Paketmanager der jeweiligen Distribution installieren)
+* Optional (Grafischer Distrobox Manager): https://flathub.org/en/apps/com.ranfdev.DistroShelf
+
+:ini-link: https://codeberg.org/tobilinz/quartus-prime-lite-installer/raw/tag/0.0.1/distrobox.ini
+
+=== CLI
+
+. `+distrobox assemble --file "{ini-link}"+`
+. `+distrobox enter quartus-prime-lite-ubuntu+` und ein paar Minuten warten
+. Den Anweisungen folgen.
+  Wichtig: Manchmal dauert es etwas, bis die nächste Anweisung auftaucht
+
+=== Grafisch
+
+. Distroshelf öffnen
+. Neue Distrobox hinzufügen (In der oberen, linken Ecke des Fensters auf das Plus clicken)
+. `+From URL+` / `+Von URL+` Tab
+. `+{ini-link}+` einfügen 
+. Distrobox erstellen
+. Im Hauptfenter links `+quartus-prime-lite-ubuntu+` auswählen
+. Im Hauptfenster oben den Tab `+Terminal+` auswählen und ein paar Minuten warten
+. Den Anweisungen folgen.
+  Wichtig: Manchmal dauert es etwas, bis die nächste Anweisung auftaucht
+
+=== Optional: MIME-Unterstützung
+
+Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
+  ~/.local/share/quartus-prime-lite-ubuntu/install-bdf-mime
+
+== Wichtiger Hinweis
+
+Wenn du in Quartus simulierst, denk dran, immer `+-suppress 12110+` in den Simulationseinstellungen bei der Zeile, die mit `+vsim+` beginnt, anzuhängen.
+
+== Deinstallation
+
+`distrobox rm quartus-prime-lite-ubuntu`
+`rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu`
+
+== Entwicklung in diesem Repository
+
+=== Systemanforderungen
+
+* distrobox
+* just
+
+=== Projekt manuell installieren
+
+Containerfile zu Image kompilieren:
+`+just build+`
+
+Image installieren:
+`+just assemble+`

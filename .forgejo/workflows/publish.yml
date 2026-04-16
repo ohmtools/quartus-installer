@@ -7,15 +7,14 @@ jobs:
     name: Publish
     runs-on: docker
     container:
-      image: quay.io/podman/stable:latest
+      image: codeberg.org/tobilinz/quartus-prime-lite-installer-cicd:latest
     steps:
-      - name: Install Dependencies
-        run: |
-          dnf install -y git curl nodejs
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           ref: ${{ forgejo.head_ref }}
+      - name: Set Version
+        run: sed -i "s/%VERSION/${{ forgejo.ref_name }}/g" distrobox.ini
       - name: Build
         run: |
           podman build -t codeberg.org/tobilinz/quartus-prime-lite-installer:${{ forgejo.ref_name }} .
@@ -23,3 +22,7 @@ jobs:
         run: |
           podman login codeberg.org --username tobilinz --password ${{ secrets.QUARTUS_PACKAGE_TOKEN }}
           podman push codeberg.org/tobilinz/quartus-prime-lite-installer:${{ forgejo.ref_name }}
+      - name: Tag Latest
+        run: |
+          podman tag quartus-prime-lite-installer:${{ forgejo.ref_name}} codeberg.org/tobilinz/quartus-prime-lite-installer:latest
+          podman push codeberg.org/tobilinz/quartus-prime-lite-installer:latest
