@@ -3,7 +3,7 @@ set -euo pipefail
 
 VARS_LOCATION="$HOME/.local/share/quartus-prime-lite-ubuntu/.config/bdf-mime-vars"
 [[ -f "$VARS_LOCATION" ]] && source "$VARS_LOCATION" || {
-  echo "Stelle zuerst die installation mit install-quartus fertig."
+  echo "Stelle zuerst die installation mit quartus-install fertig."
   exit 1
 }
 

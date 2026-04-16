@@ -21,8 +21,13 @@ jobs:
 
       - name: Build
         run: |
-          podman build --platform linux/amd64 -f container/Containerfile -t amd64-tmp ./container
-          podman build --platform linux/arm64 -f container/Containerfile -t arm64-tmp ./container
+          podman build --platform linux/amd64 -f container/Containerfile -t amd64-tmp ./container &
+          PID_AMD64=$!
+          podman build --platform linux/arm64 -f container/Containerfile -t arm64-tmp ./container &
+          PID_ARM64=$!
+
+          wait $PID_AMD64 || { echo "ERROR: amd64 build failed"; exit 1; }
+          wait $PID_ARM64 || { echo "ERROR: arm64 build failed"; exit 1; }
 
       - name: Create Manifest
         run: |
