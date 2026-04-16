@@ -5,13 +5,13 @@
 === Systemanforderungen
 
 * *⚠️  MINDESTENS 35GB SPEICHERPLATZ*
-* distrobox 
+* `distrobox`
   https://distrobox.it/#installation  (Am besten über Paketmanager der jeweiligen Distribution installieren)
 * Optional (Grafischer Distrobox Manager): https://flathub.org/en/apps/com.ranfdev.DistroShelf
 
 :ini-link: https://codeberg.org/tobilinz/quartus-prime-lite-installer/raw/branch/main/distrobox.ini
 
-=== CLI
+=== Konsole
 
 . `+distrobox assemble create --file "+{ini-link}+"+`
 . `+distrobox enter quartus-prime-lite-ubuntu+` und ein paar Minuten warten
@@ -29,6 +29,9 @@
 . Den Anweisungen folgen
 
 === Optional: MIME-Unterstützung
+
+Mit MIME-Unterstützung kannst du `.bdf` Dateien mit einem Doppelklick in Quartus öffnen.
+Das funktioniert erst, wenn du Quartus erfolgreich installiert hast.
 
 Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
 
