@@ -10,14 +10,10 @@ jobs:
       image: codeberg.org/tobilinz/quartus-prime-lite-installer-cicd:latest
       options: --privileged
     steps:
-      - name: Test
-        run: |
-          echo "REF_NAME: ${{ forgejo.ref_name }}"
-          echo "HEAD_REF: ${{ forgejo.head_ref }}"
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ forgejo.head_ref }}
+          ref: ${{ forgejo.ref_name }}
 
       - name: Register QEMU binfmt handlers
         run: |
