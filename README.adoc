@@ -14,7 +14,7 @@
 
 === CLI
 
-. `+distrobox assemble --file "{ini-link}"+`
+. `+distrobox assemble --file "+{ini-link}+"+`
 . `+distrobox enter quartus-prime-lite-ubuntu+` und ein paar Minuten warten
 . Den Anweisungen folgen.
   Wichtig: Manchmal dauert es etwas, bis die nächste Anweisung auftaucht
@@ -24,7 +24,7 @@
 . Distroshelf öffnen
 . Neue Distrobox hinzufügen (In der oberen, linken Ecke des Fensters auf das Plus clicken)
 . `+From URL+` / `+Von URL+` Tab
-. `+{ini-link}+` einfügen 
+. `{ini-link}` einfügen 
 . Distrobox erstellen
 . Im Hauptfenter links `+quartus-prime-lite-ubuntu+` auswählen
 . Im Hauptfenster oben den Tab `+Terminal+` auswählen und ein paar Minuten warten
@@ -34,6 +34,7 @@
 === Optional: MIME-Unterstützung
 
 Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
+
   ~/.local/share/quartus-prime-lite-ubuntu/install-bdf-mime
 
 == Wichtiger Hinweis
@@ -42,8 +43,11 @@ Wenn du in Quartus simulierst, denk dran, immer `+-suppress 12110+` in den Simul
 
 == Deinstallation
 
-`distrobox rm quartus-prime-lite-ubuntu`
-`rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu`
+Führe folgende Befehle in einem neuen Host-Konsolenfenster aus:
+
+  distrobox rm quartus-prime-lite-ubuntu
+
+  rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
 
 == Entwicklung in diesem Repository
 
@@ -55,7 +59,9 @@ Wenn du in Quartus simulierst, denk dran, immer `+-suppress 12110+` in den Simul
 === Projekt manuell installieren
 
 Containerfile zu Image kompilieren:
-`+just build+`
+
+  just build
 
 Image installieren:
-`+just assemble+`
+
+  just assemble
