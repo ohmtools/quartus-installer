@@ -41,9 +41,11 @@ if [ ! -f "$MIME_FILE" ]; then
     cp /etc/quartus/quartus-bdf.xml "$MIME_FILE"
 fi
 
-MIME_VARS="$HOME/.config/bdf-mime-vars"
-touch "$MIME_VARS"
-echo -e "export ICON_FILE=$ICON_FILE\nexport MIME_FILE=$MIME_FILE" >"$MIME_VARS"
+MIME_VARS_DIR="$HOME/.config"
+MIME_VARS_FILE="$MIME_VARS_DIR/bdf-mime-vars"
+mkdir -p "$MIME_VARS_DIR"
+touch "$MIME_VARS_FILE"
+echo -e "export ICON_FILE=$ICON_FILE\nexport MIME_FILE=$MIME_FILE" >"$MIME_VARS_FILE"
 
 UNINSTALL_FILE="$HOME/uninstall"
 if [ ! -f "$UNINSTALL_FILE" ]; then
