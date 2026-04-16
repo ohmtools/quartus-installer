@@ -20,4 +20,7 @@ distrobox rm -f quartus-prime-lite-ubuntu
 chmod -R +w ~/.local/share/quartus-prime-lite-ubuntu
 rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
 
+update-mime-database ~/.local/share/mime
+gtk-update-icon-cache ~/.local/share/icons/hicolor -f 2>/dev/null
+
 echo "Deinstallation abgeschlossen."

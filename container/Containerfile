@@ -17,7 +17,6 @@ RUN mkdir -p /etc/quartus
 COPY quartus.desktop /etc/quartus/quartus.desktop
 COPY quartus-bdf.xml /etc/quartus/quartus-bdf.xml
 
-
 RUN mkdir -p /etc/profile.d/
 COPY <<'EOF' /etc/profile.d/quartus-setup.sh
 SHARE="$HOME/.local/share"
@@ -26,7 +25,7 @@ QUARTUS_DIR="$SHARE/quartus-prime-lite"
 ICON_FILE="$QUARTUS_DIR/quartus/adm/quartusii.png"
 
 DESKTOP_DIR="$SHARE/applications"
-DESKTOP_FILE="$APPLICATIONS_DIR/quartus.desktop"
+DESKTOP_FILE="$DESKTOP_DIR/quartus.desktop"
 if [ ! -f "$DESKTOP_FILE" ]; then
     mkdir -p "$DESKTOP_DIR"
     cp /etc/quartus/quartus.desktop "$DESKTOP_FILE"
