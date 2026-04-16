@@ -6,7 +6,9 @@
 
 * *⚠️  MINDESTENS 35GB SPEICHERPLATZ*
 * `distrobox`
-  https://distrobox.it/#installation  (Am besten über den Paketmanager der jeweiligen Distribution installieren; Falls eine Auswahl auftaucht, in der `podman` zur Wahl steht, `podman` auswählen)
+  https://distrobox.it/#installation 
+** Am besten über den Paketmanager der jeweiligen Distribution installieren
+** Falls eine Auswahl auftaucht, in der `podman` zur Wahl steht, `podman` auswählen
 
 === Konsole
 
@@ -17,9 +19,8 @@
 === Optional: MIME-Unterstützung
 
 Mit MIME-Unterstützung kannst du `.bdf` Dateien mit einem Doppelklick in Quartus öffnen.
-Das funktioniert erst, wenn du Quartus erfolgreich installiert hast.
 
-Führe folgenden Befehl in einem Host-Konsolenfenster aus:
+Nachdem du Quartus erfolgreich auf deinem System installiert hast, führe folgenden Befehl in einem Host-Konsolenfenster aus:
 
   $HOME/.local/share/quartus-prime-lite-ubuntu/mime-install
 
