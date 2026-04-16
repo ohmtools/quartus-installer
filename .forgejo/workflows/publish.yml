@@ -8,19 +8,30 @@ jobs:
     runs-on: docker
     container:
       image: codeberg.org/tobilinz/quartus-prime-lite-installer-cicd:latest
+      options: --privileged
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           ref: ${{ forgejo.head_ref }}
+
+      - name: Register QEMU binfmt handlers
+        run: |
+          podman run --rm --privileged ghcr.io/multi-arch/qemu-user-static --reset -p yes
+
       - name: Build
         run: |
-          podman build -t codeberg.org/tobilinz/quartus-prime-lite-installer:${{ forgejo.ref_name }} ./container
+          podman build --platform linux/amd64 -f container/Containerfile -t amd64-tmp ./container
+          podman build --platform linux/arm64 -f container/Containerfile -t arm64-tmp ./container
+
+      - name: Create Manifest
+        run: |
+          podman manifest create quartus-prime-lite-installer:latest
+          podman manifest add quartus-prime-lite-installer:latest containers-storage:localhost/amd64-tmp
+          podman manifest add quartus-prime-lite-installer:latest containers-storage:localhost/arm64-tmp
+
       - name: Publish
         run: |
           podman login codeberg.org --username tobilinz --password ${{ secrets.QUARTUS_PACKAGE_TOKEN }}
-          podman push codeberg.org/tobilinz/quartus-prime-lite-installer:${{ forgejo.ref_name }}
-      - name: Tag Latest
-        run: |
-          podman tag quartus-prime-lite-installer:${{ forgejo.ref_name}} codeberg.org/tobilinz/quartus-prime-lite-installer:latest
-          podman push codeberg.org/tobilinz/quartus-prime-lite-installer:latest
+          podman manifest push quartus-prime-lite-installer:latest docker://codeberg.org/tobilinz/quartus-prime-lite-installer:${{ forgejo.ref_name }}
+          podman manifest push quartus-prime-lite-installer:latest docker://codeberg.org/tobilinz/quartus-prime-lite-installer:latest
