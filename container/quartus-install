@@ -44,7 +44,7 @@ INSTALLER_FILE="$HOME/.cache/quartus-prime-lite-installer"
 
 SHOULD_DOWNLOAD="ja"
 if [ -f "$INSTALLER_FILE" ]; then
-  read -rp "Willst du die neuste Version des Quartus Prime Installers herunterladen (ja/nein)? " SHOULD_DOWNLOAD
+  read -rp "Willst du den Quartus Installer nochmal herunterladen (ja/nein)? " SHOULD_DOWNLOAD
   echo ""
 fi
 
@@ -94,7 +94,9 @@ INSTALLER=("$INSTALLER_FILE" --quiet --)
 
 COMPONENT_LIST="$("${INSTALLER[@]}" --help | awk '/--components arg/{found=1} found{print; if(NF==0 || (found>1 && /^  --/)) exit; found++}' | head -n -1 | sed 's/^[[:space:]]*//' | tail -n +3)"
 
-echo "Gib an, welche Komponenten Quartus du installieren willst."
+echo "Welche Komponenten willst du installieren?"
+echo "Wichtig: Auf Groß- und Kleinschreibung achten!"
+echo ""
 echo "Verfügbare Komponenten:"
 echo "$COMPONENT_LIST"
 read -rp "Eingabe (Komma-Getrennt): " COMPONENTS

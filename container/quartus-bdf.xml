@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-  <mime-type type="application/x-quartus-bdf">
-    <comment>Quartus Block Design</comment>
-    <glob pattern="*.bdf"/>
-    <generic-icon name="application-x-quartus-bdf"/>
-  </mime-type>
-</mime-info>

@@ -8,12 +8,12 @@ VARS_LOCATION="$HOME/.local/share/quartus-prime-lite-ubuntu/.config/bdf-mime-var
 }
 
 MIME_FILE_DIR="$HOME/.local/share/mime/packages"
-MIME_FILE_PATH="$MIME_FILE_DIR/quartus-bdf.xml"
+MIME_FILE_PATH="$MIME_FILE_DIR/quartus.xml"
 mkdir -p "$MIME_FILE_DIR"
 cp "$MIME_FILE" "$MIME_FILE_PATH"
 
 MIME_ICON_DIR="$HOME/.local/share/icons/hicolor/64x64/mimetypes"
-MIME_ICON_PATH="$MIME_ICON_DIR/application-x-quartus-bdf.png"
+MIME_ICON_PATH="$MIME_ICON_DIR/application-x-quartus.png"
 mkdir -p "$MIME_ICON_DIR"
 cp "$ICON_FILE" "$MIME_ICON_PATH"
 

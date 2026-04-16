@@ -21,11 +21,11 @@
 
 . Distroshelf öffnen
 . Neue Distrobox hinzufügen (In der oberen, linken Ecke des Fensters auf das Plus clicken)
-. `+From URL+` / `+Von URL+` Tab
-. `{ini-link}` einfügen 
+. `From URL` / `Von URL` Tab
+. Den Link `{ini-link}` einfügen 
 . Distrobox erstellen
 . Im Hauptfenter links `+quartus-prime-lite-ubuntu+` auswählen
-. Im Hauptfenster oben den Tab `+Terminal+` auswählen und ein paar Minuten warten
+. Im Hauptfenster oben den Tab `Terminal` auswählen und ein paar Minuten warten
 . Den Anweisungen folgen
 
 === Optional: MIME-Unterstützung
@@ -39,7 +39,7 @@ Führe folgenden Befehl in einem *neuen* Host-Konsolenfenster aus:
 
 == Wichtiger Hinweis
 
-Wenn du in Quartus simulierst, denk dran, immer `+-suppress 12110+` in den Simulationseinstellungen bei der Zeile, die mit `+vsim+` beginnt, anzuhängen.
+Wenn du in Quartus simulierst, denk dran, immer `-suppress 12110` in den Simulationseinstellungen bei der Zeile, die mit `vsim` beginnt, anzuhängen.
 
 == Deinstallation
 

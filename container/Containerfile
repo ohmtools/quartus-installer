@@ -15,7 +15,7 @@ COPY uninstall /usr/local/bin/quartus-uninstall
 
 RUN mkdir -p /etc/quartus
 COPY quartus.desktop /etc/quartus/quartus.desktop
-COPY quartus-bdf.xml /etc/quartus/quartus-bdf.xml
+COPY quartus.xml /etc/quartus/quartus.xml
 
 RUN mkdir -p /etc/profile.d/
 COPY <<'EOF' /etc/profile.d/quartus-setup.sh
@@ -34,17 +34,17 @@ if [ ! -f "$DESKTOP_FILE" ]; then
 fi
 
 MIME_DIR="$SHARE/mime/packages"
-MIME_FILE="$MIME_DIR/quartus-bdf.xml"
+MIME_FILE="$MIME_DIR/quartus.xml"
 if [ ! -f "$MIME_FILE" ]; then
     mkdir -p "$MIME_DIR"
-    cp /etc/quartus/quartus-bdf.xml "$MIME_FILE"
+    cp /etc/quartus/quartus.xml "$MIME_FILE"
 fi
 
 MIME_VARS_DIR="$HOME/.config"
 MIME_VARS_FILE="$MIME_VARS_DIR/bdf-mime-vars"
 mkdir -p "$MIME_VARS_DIR"
 touch "$MIME_VARS_FILE"
-echo -e "export ICON_FILE=$ICON_FILE\nexport MIME_FILE=$MIME_FILE" >"$MIME_VARS_FILE"
+printf 'export ICON_FILE=%s\nexport MIME_FILE=%s\n' "$ICON_FILE" "$MIME_FILE" >"$MIME_VARS_FILE"
 
 UNINSTALL_FILE="$HOME/uninstall"
 if [ ! -f "$UNINSTALL_FILE" ]; then

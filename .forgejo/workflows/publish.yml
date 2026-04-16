@@ -37,5 +37,6 @@ jobs:
           podman manifest push quartus-prime-lite-installer:latest docker://codeberg.org/tobilinz/quartus-prime-lite-installer:latest
 
       - name: Cleanup
+        if: always()
         run: |
-          podman rmi amd64-tmp arm64-tmp
+          podman rmi amd64-tmp arm64-tmp || true

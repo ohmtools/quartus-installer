@@ -15,13 +15,14 @@ trap 'rm -f -- "$0"' EXIT
 echo "Deinstalliere..."
 echo ""
 
-distrobox rm -f quartus-prime-lite-ubuntu 2>/dev/null
+distrobox rm -f quartus-prime-lite-ubuntu 2>/dev/null || true
 
-chmod -R +w ~/.local/share/quartus-prime-lite-ubuntu
-rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
+DISTROBOX_HOME_DIR="$HOME/.local/share/quartus-prime-lite-ubuntu"
+[ -d "$DISTROBOX_HOME_DIR" ] && chmod -R +w "$DISTROBOX_HOME_DIR"
+rm -rf ~/.local/share/mime/packages/quartus.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus.png "$DISTROBOX_HOME_DIR"
 
-update-mime-database ~/.local/share/mime
-gtk-update-icon-cache ~/.local/share/icons/hicolor -f 2>/dev/null
+update-mime-database ~/.local/share/mime || true
+gtk-update-icon-cache ~/.local/share/icons/hicolor -f 2>/dev/null || true
 
 echo ""
 echo "Deinstallation abgeschlossen."
