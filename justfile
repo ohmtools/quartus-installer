@@ -2,7 +2,7 @@ default:
   just --list
 
 build:
-  podman build -t quartus-prime-lite-ubuntu .
+  podman build -t quartus-prime-lite-ubuntu ./container
 
 assemble:
   distrobox assemble create --file distrobox.ini

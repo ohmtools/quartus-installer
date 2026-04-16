@@ -2,15 +2,14 @@
 
 == Installation
 
-⚠️  MINDESTENS 35GB SPEICHERPLATZ BENÖTIGT
-
 === Systemanforderungen
 
+* *⚠️  MINDESTENS 35GB SPEICHERPLATZ*
 * distrobox 
   https://distrobox.it/#installation  (Am besten über Paketmanager der jeweiligen Distribution installieren)
 * Optional (Grafischer Distrobox Manager): https://flathub.org/en/apps/com.ranfdev.DistroShelf
 
-:ini-link: https://codeberg.org/tobilinz/quartus-prime-lite-installer/raw/tag/0.0.1/distrobox.ini
+:ini-link: https://codeberg.org/tobilinz/quartus-prime-lite-installer/raw/branch/main/distrobox.ini
 
 === CLI
 
@@ -35,7 +34,7 @@
 
 Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
 
-  ~/.local/share/quartus-prime-lite-ubuntu/install-bdf-mime
+  quartus-install-mime
 
 == Wichtiger Hinweis
 
@@ -43,15 +42,11 @@ Wenn du in Quartus simulierst, denk dran, immer `+-suppress 12110+` in den Simul
 
 == Deinstallation
 
-Führe folgende Befehle in einem neuen Host-Konsolenfenster aus:
+Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
 
-  distrobox rm -f quartus-prime-lite-ubuntu
+  quartus-uninstall
 
-  chmod -R +w ~/.local/share/quartus-prime-lite-ubuntu
-
-  rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
-
-Grafisch kann man auch in Distroshelf das Programm entfernen. Das ersetzt den ersten Befehl, aber die anderen Zwei (`rm ...`) muss man trotzdem in einer Konsole ausführen.
+Ohne diesen Befehl wird das Programm nicht vollständig vom System entfernt.
 
 == Entwicklung in diesem Repository
 

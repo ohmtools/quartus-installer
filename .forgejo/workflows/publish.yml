@@ -13,11 +13,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ forgejo.head_ref }}
-      - name: Set Version
-        run: sed -i "s/%VERSION/${{ forgejo.ref_name }}/g" distrobox.ini
       - name: Build
         run: |
-          podman build -t codeberg.org/tobilinz/quartus-prime-lite-installer:${{ forgejo.ref_name }} .
+          podman build -t codeberg.org/tobilinz/quartus-prime-lite-installer:${{ forgejo.ref_name }} ./container
       - name: Publish
         run: |
           podman login codeberg.org --username tobilinz --password ${{ secrets.QUARTUS_PACKAGE_TOKEN }}

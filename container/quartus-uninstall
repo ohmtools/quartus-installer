@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+distrobox stop -Y quartus-prime-lite-ubuntu
+
+chmod -R +w ~/.local/share/quartus-prime-lite-ubuntu
+rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
+
+distrobox rm -f quartus-prime-lite-ubuntu

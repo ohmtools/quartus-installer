@@ -15,7 +15,7 @@ exit_handler() {
   echo "------------------------------------------"
   echo "Dieses Programm wurde beendet."
   echo "Du kannst es erneut ausführen, indem du"
-  echo "install-quartus in das Terminal eingibst."
+  echo "quartus-install in das Terminal eingibst."
   echo "Evtl. musst du zuerst folgendes eingeben:"
   echo "distrobox enter quartus-prime-lite-ubuntu"
   echo "------------------------------------------"
@@ -117,10 +117,8 @@ fi
 
 distrobox-export --app quartus >/dev/null
 
-echo -e "export ICON_FILE=$ICON_FILE\nexport MIME_FILE=$MIME_FILE" >~/.config/bdf-mime-vars
-
 echo ""
 echo "------------------------------------------"
 echo "FERTIG"
-echo "Bitte schließes dieses Konsolenfenster."
+echo "Bitte schließe dieses Konsolenfenster."
 echo "------------------------------------------"
