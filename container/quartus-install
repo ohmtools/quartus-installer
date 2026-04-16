@@ -76,7 +76,7 @@ if [ "$SHOULD_DOWNLOAD" = "ja" ]; then
     echo "Keine Datei ausgewählt."
     exit 1
   }
-  if [[ -z "$DOWNLOADED_INSTALLER_PATH" ]] || ! mv -- "$DOWNLOADED_INSTALLER_PATH" "$INSTALLER_FILE" 2>/dev/null; then
+  if [[ -z "$DOWNLOADED_INSTALLER_PATH" ]] || ! cp -f "$DOWNLOADED_INSTALLER_PATH" "$INSTALLER_FILE" 2>/dev/null; then
     echo "Fehler: Du hast keine valide Datei ausgewählt." >&2
     exit 1
   fi

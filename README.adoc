@@ -33,7 +33,7 @@
 Mit MIME-Unterstützung kannst du `.bdf` Dateien mit einem Doppelklick in Quartus öffnen.
 Das funktioniert erst, wenn du Quartus erfolgreich installiert hast.
 
-Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
+Führe folgenden Befehl in einem *neuen* Host-Konsolenfenster aus:
 
   $HOME/.local/share/quartus-prime-lite-ubuntu/mime-install
 
@@ -43,7 +43,7 @@ Wenn du in Quartus simulierst, denk dran, immer `+-suppress 12110+` in den Simul
 
 == Deinstallation
 
-Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
+Führe folgenden Befehl in einem *neuen* Host-Konsolenfenster aus:
 
   $HOME/.local/share/quartus-prime-lite-ubuntu/uninstall
 
