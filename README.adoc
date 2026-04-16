@@ -49,6 +49,8 @@ Führe folgende Befehle in einem neuen Host-Konsolenfenster aus:
 
   rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
 
+Grafisch kann man auch in Distroshelf das Programm entfernen. Das ersetzt den ersten Befehl, aber den Zweiten (`rm ...`) muss man trotzdem ausführen.
+
 == Entwicklung in diesem Repository
 
 === Systemanforderungen
