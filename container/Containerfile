@@ -22,31 +22,37 @@ RUN mkdir -p /etc/profile.d/
 COPY <<'EOF' /etc/profile.d/quartus-setup.sh
 SHARE="$HOME/.local/share"
 
-APPLICATIONS_DIR="$SHARE/applications"
+QUARTUS_DIR="$SHARE/quartus-prime-lite"
+ICON_FILE="$QUARTUS_DIR/quartus/adm/quartusii.png"
+
+DESKTOP_DIR="$SHARE/applications"
 DESKTOP_FILE="$APPLICATIONS_DIR/quartus.desktop"
-QUARTUS_DIR="$HOME/.local/share/quartus-prime-lite"
-export ICON_FILE="$QUARTUS_DIR/quartus/adm/quartusii.png"
 if [ ! -f "$DESKTOP_FILE" ]; then
-    mkdir -p "$APPLICATIONS_DIR"
+    mkdir -p "$DESKTOP_DIR"
     cp /etc/quartus/quartus.desktop "$DESKTOP_FILE"
     sed -i "s|^Exec=.*|Exec=$QUARTUS_DIR/quartus/bin/quartus --64bit %f|" "$DESKTOP_FILE"
     sed -i "s|^Icon=.*|Icon=$ICON_FILE|" "$DESKTOP_FILE"
 fi
 
 MIME_DIR="$SHARE/mime/packages"
-export MIME_FILE="$MIME_DIR/quartus-bdf.xml"
+MIME_FILE="$MIME_DIR/quartus-bdf.xml"
 if [ ! -f "$MIME_FILE" ]; then
     mkdir -p "$MIME_DIR"
     cp /etc/quartus/quartus-bdf.xml "$MIME_FILE"
 fi
 
-echo -e "export ICON_FILE=$ICON_FILE\nexport MIME_FILE=$MIME_FILE" >~/.config/bdf-mime-vars
+MIME_VARS="$HOME/.config/bdf-mime-vars"
+touch "$MIME_VARS"
+echo -e "export ICON_FILE=$ICON_FILE\nexport MIME_FILE=$MIME_FILE" >"$MIME_VARS"
 
-if [ ! -f "$HOME/uninstall" ]; then
-    cp /usr/local/bin/quartus-uninstall "$HOME/uninstall"
+UNINSTALL_FILE="$HOME/uninstall"
+if [ ! -f "$UNINSTALL_FILE" ]; then
+    cp /usr/local/bin/quartus-uninstall "$UNINSTALL_FILE"
 fi
-if [ ! -f "$HOME/mime-install" ]; then
-    cp /usr/local/bin/quartus-mime-install "$HOME/mime-install"
+
+MIME_INSTALL_FILE="$HOME/mime-install"
+if [ ! -f "$MIME_INSTALL_FILE" ]; then
+    cp /usr/local/bin/quartus-mime-install "$MIME_INSTALL_FILE"
 fi
 
 quartus-install
