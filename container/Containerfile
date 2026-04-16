@@ -10,8 +10,13 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY quartus-install /usr/local/bin/quartus-install
-COPY quartus-install-mime /usr/local/bin/quartus-install-mime
-COPY quartus-uninstall /usr/local/bin/quartus-uninstall
+COPY mime-install /usr/local/bin/quartus-mime-install
+COPY uninstall /usr/local/bin/quartus-uninstall
+
+RUN mkdir -p /etc/quartus
+COPY quartus.desktop /etc/quartus/quartus.desktop
+COPY quartus-bdf.xml /etc/quartus/quartus-bdf.xml
+
 
 RUN mkdir -p /etc/profile.d/
 COPY <<'EOF' /etc/profile.d/quartus-setup.sh
@@ -37,11 +42,12 @@ fi
 
 echo -e "export ICON_FILE=$ICON_FILE\nexport MIME_FILE=$MIME_FILE" >~/.config/bdf-mime-vars
 
+if [ ! -f "$HOME/uninstall" ]; then
+    cp /usr/local/bin/quartus-uninstall "$HOME/uninstall"
+fi
+if [ ! -f "$HOME/mime-install" ]; then
+    cp /usr/local/bin/quartus-mime-install "$HOME/mime-install"
+fi
+
 quartus-install
 EOF
-
-RUN mkdir -p /etc/quartus
-COPY quartus.desktop /etc/quartus/quartus.desktop
-COPY quartus-bdf.xml /etc/quartus/quartus-bdf.xml
-
-

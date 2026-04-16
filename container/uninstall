@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_PATH="$(realpath "$0")"
+
+if [[ "$SCRIPT_PATH" != /tmp/* ]]; then
+  TEMP_SCRIPT="$(mktemp /tmp/uninstall.XXXXXX.sh)"
+  cp "$SCRIPT_PATH" "$TEMP_SCRIPT"
+  chmod +x "$TEMP_SCRIPT"
+  exec "$TEMP_SCRIPT" "$@"
+fi
+
+trap 'rm -f -- "$0"' EXIT
+
+echo "Deinstalliere..."
+echo ""
+
+distrobox rm -f quartus-prime-lite-ubuntu
+
+chmod -R +w ~/.local/share/quartus-prime-lite-ubuntu
+rm -rf ~/.local/share/mime/packages/quartus-bdf.xml ~/.local/share/icons/hicolor/64x64/mimetypes/application-x-quartus-bdf.png ~/.local/share/quartus-prime-lite-ubuntu
+
+echo "Deinstallation abgeschlossen."

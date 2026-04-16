@@ -13,10 +13,9 @@
 
 === CLI
 
-. `+distrobox assemble --file "+{ini-link}+"+`
+. `+distrobox assemble create --file "+{ini-link}+"+`
 . `+distrobox enter quartus-prime-lite-ubuntu+` und ein paar Minuten warten
-. Den Anweisungen folgen.
-  Wichtig: Manchmal dauert es etwas, bis die nächste Anweisung auftaucht
+. Den Anweisungen folgen
 
 === Grafisch
 
@@ -27,14 +26,13 @@
 . Distrobox erstellen
 . Im Hauptfenter links `+quartus-prime-lite-ubuntu+` auswählen
 . Im Hauptfenster oben den Tab `+Terminal+` auswählen und ein paar Minuten warten
-. Den Anweisungen folgen.
-  Wichtig: Manchmal dauert es etwas, bis die nächste Anweisung auftaucht
+. Den Anweisungen folgen
 
 === Optional: MIME-Unterstützung
 
 Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
 
-  quartus-install-mime
+  $HOME/.local/share/quartus-prime-lite-ubuntu/mime-install
 
 == Wichtiger Hinweis
 
@@ -44,7 +42,7 @@ Wenn du in Quartus simulierst, denk dran, immer `+-suppress 12110+` in den Simul
 
 Führe folgenden Befehl in einem neuen Host-Konsolenfenster aus:
 
-  quartus-uninstall
+  $HOME/.local/share/quartus-prime-lite-ubuntu/uninstall
 
 Ohne diesen Befehl wird das Programm nicht vollständig vom System entfernt.
 
