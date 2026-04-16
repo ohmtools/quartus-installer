@@ -28,12 +28,14 @@ Nachdem du Quartus erfolgreich auf deinem System installiert hast, führe folgen
 === Die Simulation gibt den Fehler `Error (suppressible): (vsim-12110)` aus
 
 Im Simulationsfenster:
+
 . `+Simulation > Simulation Settings+`
 . `-suppress 12110` bei der Zeile, die mit `vsim` beginnt, anhängen.
 
 === Die Simulation gibt den Fehler `Error: Invalid license environment` aus
 
 Im Hauptfenster von Quartus Prime Lite:
+
 . In der oberen Toolbar `+Tools > License Setup..+` wählen
 . Im `Options` Fenster, das sich geöffnet hat, folgendes tun:
 ** Häkchen bei `Automatically Refresh Server License Token` setzen
