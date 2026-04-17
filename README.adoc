@@ -17,7 +17,7 @@
 
 === Optional: MIME-Unterstützung
 
-Mit MIME-Unterstützung kannst du `.bdf` Dateien mit einem Doppelklick in Quartus öffnen.
+Mit MIME-Unterstützung kannst du `.qpf` und `.vwf` Dateien mit einem Doppelklick in Quartus öffnen.
 
 Nachdem du Quartus erfolgreich auf deinem System installiert hast, führe folgenden Befehl in einem Host-Konsolenfenster aus:
 
