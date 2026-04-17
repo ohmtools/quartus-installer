@@ -32,7 +32,7 @@ Im Simulationsfenster:
 . `+Simulation > Simulation Settings+`
 . `-suppress 12110` bei der Zeile, die mit `vsim` beginnt, anhängen.
 
-=== Die Simulation gibt den Fehler `Error: Invalid license environment` aus
+=== Die Simulation gibt den Fehler `Error: Invalid license environment` oder `Error: Failure to obtain a Verilog simulation license` aus
 
 Im Hauptfenster von Quartus Prime Lite:
 
