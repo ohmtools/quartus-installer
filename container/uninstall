@@ -16,7 +16,8 @@ echo "Deinstalliere..."
 echo ""
 
 distrobox rm -f quartus-prime-lite-ubuntu 2>/dev/null || true
-podman image rm -i codeberg.org/tobilinz/quartus-prime-lite-installer:latest localhost/quartus-prime-lite-installer:local || true
+podman image rm -i codeberg.org/tobilinz/quartus-prime-lite-installer:latest localhost/quartus-prime-lite-installer:local 2>/dev/null || true
+docker image rm -i codeberg.org/tobilinz/quartus-prime-lite-installer:latest localhost/quartus-prime-lite-installer:local 2>/dev/null || true
 
 DISTROBOX_HOME_DIR="$HOME/.local/share/quartus-prime-lite-ubuntu"
 [ -d "$DISTROBOX_HOME_DIR" ] && chmod -R +w "$DISTROBOX_HOME_DIR"
