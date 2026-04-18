@@ -4,7 +4,8 @@
 
 === Systemanforderungen
 
-* *⚠️  MINDESTENS 35GB SPEICHERPLATZ*
+* 35GB Speicherplatz
+* Irgendeine Linux-Distribution als Betriebssystem
 * https://distrobox.it/#installation[`distrobox`]
 ** Am besten über den Paketmanager der jeweiligen Distribution installieren
 ** Falls eine Auswahl auftaucht, in der `podman` zur Wahl steht, `podman` auswählen
