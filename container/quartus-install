@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+DOWNLOAD_LINK="https://www.altera.com/downloads/fpga-development-tools/quartus-prime-lite-edition-design-software-version-25-1-linux"
+
 error_handler() {
+  notify-send --app-name "Quartus Prime Lite Installer" "Quartus Installation" "Es ist ein Fehler aufgetreten."
+
   echo ""
   echo ""
   echo "-------------------------------------------"
@@ -15,7 +19,7 @@ exit_handler() {
   echo ""
   echo "-------------------------------------------"
   echo "Dieses Programm wurde beendet."
-  echo "Du kannst es erneut ausführen, indem du"
+  echo "Du kannst es erneut starten, indem du"
   echo "'quartus-install' in das Terminal eingibst."
   echo "-------------------------------------------"
   echo ""
@@ -40,23 +44,22 @@ echo ""
 
 INSTALLER_FILE="$HOME/.cache/quartus-prime-lite-installer"
 
-SHOULD_DOWNLOAD="ja"
+SHOULD_DOWNLOAD="0"
 if [ -f "$INSTALLER_FILE" ]; then
-  read -rp "Willst du den Quartus Installer nochmal herunterladen (ja/nein)? " SHOULD_DOWNLOAD
-  echo ""
+  zenity --title "Installer herunterladen?" --question --text "Willst du den Quartus Installer nochmal herunterladen?" --default-cancel 2>/dev/null || {
+    SHOULD_DOWNLOAD="1"
+  }
 fi
 
-SHOULD_DOWNLOAD=$(echo "$SHOULD_DOWNLOAD" | tr '[:upper:]' '[:lower:]' | tr -d ' ')
-if [ "$SHOULD_DOWNLOAD" = "ja" ]; then
-  DOWNLOAD_LINK="https://www.altera.com/downloads/fpga-development-tools/quartus-prime-lite-edition-design-software-version-25-1-linux"
-  xdg-open "$DOWNLOAD_LINK" 2>/dev/null &
-  echo "Dein Browser hat sich geöffnet. Lade die neuste Version von 'Quartus Prime Installer (Recommended)' für Linux herunter."
-  echo "Falls sich kein Browser öffnet, nutze diesen Link (Link mit STRG+SHIFT+C kopieren):"
-  echo "$DOWNLOAD_LINK"
-  read -rp "[ENTER] zum fortfahren..."
-  echo ""
+if [ "$SHOULD_DOWNLOAD" = "0" ]; then
+  zenity --title "Altera Software Lizenzvereinbarung" --question --text "Akzeptierst du die Altera Software Lizenzvereinbarung ?" --default-cancel 2>/dev/null
 
-  echo "Wähle die heruntergeladene '.run' Datei aus."
+  xdg-open "$DOWNLOAD_LINK" 2>/dev/null &
+
+  CONTENT1='Dein Browser ist gestartet. Lade die neuste Version von <b>Quartus Prime Installer (Recommended)</b> herunter.'
+  CONTENT2="$(printf '<a href="%s">Falls kein Browser startet, klicke hier.</a>' "$DOWNLOAD_LINK")"
+  CONTENT3='Wenn du die Datei heruntergeladen hast, klicke auf <b>OK</b>'
+  zenity --title "Installer herunterladen" --info --text "$CONTENT1\n\n$CONTENT2\n\n$CONTENT3" 2>/dev/null
 
   ZENITY_DIR="/"
   HOME_DIR="/"
@@ -70,34 +73,34 @@ if [ "$SHOULD_DOWNLOAD" = "ja" ]; then
 
   cd "$HOME_DIR" 2>/dev/null || true
 
-  DOWNLOADED_INSTALLER_PATH="$(zenity --file-selection --filename "$ZENITY_DIR/installer.run" --file-filter="*.run" 2>/dev/null)" || {
-    echo "Keine Datei ausgewählt."
+  DOWNLOADED_INSTALLER_PATH="$(zenity --title "Waehle die heruntergeladene '.run' Datei aus" --file-selection --filename "$ZENITY_DIR/installer.run" --file-filter="*.run" 2>/dev/null)" || {
+    zenity --title "Fehler" --error --text "Keine Datei ausgewaehlt." 2>/dev/null
     exit 1
   }
   if [[ -z "$DOWNLOADED_INSTALLER_PATH" ]] || ! cp -f "$DOWNLOADED_INSTALLER_PATH" "$INSTALLER_FILE" 2>/dev/null; then
-    echo "Fehler: Du hast keine valide Datei ausgewählt." >&2
+    zenity --title "Fehler" --error --text "Du hast keine valide Datei ausgewaehlt." 2>/dev/null
     exit 1
   fi
   echo ""
 fi
 
 if [ ! -f "$INSTALLER_FILE" ]; then
-  echo "Fehler: '$INSTALLER_FILE' wurde nicht gefunden. Skript wird beendet." >&2
+  zenity --title "Fehler" --error --text "'$INSTALLER_FILE' wurde nicht gefunden. Skript wird beendet." 2>/dev/null
   exit 1
 fi
 
 chmod +x "$INSTALLER_FILE"
 
+echo "Bitte warten. Ein neues Pop-Up öffnet sich gleich."
+
 INSTALLER=("$INSTALLER_FILE" --quiet --)
 
 COMPONENT_LIST="$("${INSTALLER[@]}" --help | awk '/--components arg/{found=1} found{print; if(NF==0 || (found>1 && /^  --/)) exit; found++}' | head -n -1 | sed 's/^[[:space:]]*//' | tail -n +3)"
 
-echo "Welche Komponenten willst du installieren?"
-echo ""
-echo "Verfügbare Komponenten:"
-echo "$COMPONENT_LIST"
-read -rp "Eingabe (Komma-Getrennt): " COMPONENTS
-echo ""
+COMPONENTS="$(zenity --title "Komponenten auswaehlen" --entry --text "$COMPONENT_LIST\n\nEingabe (Komma-getrennt):" --entry-text "all" 2>/dev/null)" || {
+  zenity --title "Fehler" --error --text "Keine Komponenten ausgewaehlt." 2>/dev/null
+  exit 1
+}
 
 if [ -z "$COMPONENTS" ]; then
   COMPONENTS="$(echo "$COMPONENT_LIST" | grep -E "^Default (components|devices):" | sed 's/Default [^:]*: //' | paste -sd ',')"
@@ -106,11 +109,12 @@ fi
 COMPONENTS="$(echo "$COMPONENTS" | tr -d ' ' | tr '[:upper:]' '[:lower:]')"
 
 if [ -z "$COMPONENTS" ]; then
-  echo "Fehler: Keine Komponenten ausgewählt oder gefunden." >&2
-  echo "Originaler help output (--components Sektion ist relevant):"
-  echo "$("${INSTALLER[@]}" --help)"
+  zenity --title "Fehler" --error --text "Keine Komponenten ausgewaehlt oder gefunden.\n\nOriginaler help output (nur --components Sektion ist relevant):\n$("${INSTALLER[@]}" --help)" 2>/dev/null
   exit 1
 fi
+
+INSTALLATION_TEXT="Nach Bestaetigung startet die Installation.\nDas dauert eine Weile.\nVerfolge den Fortschritt in der Konsole."
+zenity --title "Installation starten?" --question --text "$INSTALLATION_TEXT" 2>/dev/null
 
 "${INSTALLER[@]}" --bypass --cli --delete-downloads --accept-eula \
   --download-dir "$QUARTUS_CACHE" --install-dir "$QUARTUS_SHARE" \
@@ -118,5 +122,4 @@ fi
 
 distrobox-export --app quartus >/dev/null
 
-echo ""
-echo "Fertig."
+notify-send --app-name "Quartus Prime Lite Installer" "Quartus Installation" "Das Programm wurde erfolgreich installiert."

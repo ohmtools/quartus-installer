@@ -2,10 +2,10 @@ FROM quay.io/toolbx/ubuntu-toolbox:24.04
 
 # Forgejo Next
 LABEL org.opencontainers.image.source="https://codeberg.org/tobilinz/quartus-prime-lite-installer"
-LABEL org.opencontainers.image.description="Quartus prime lite package for a semi-automated install"
+LABEL org.opencontainers.image.description="Quartus Prime Lite package for a semi-automated install"
 
 RUN apt-get update \
-    && apt-get install -y zenity libglib2.0-0t64 libxext6 libfontconfig1 libsm6 libxft2 \
+    && apt-get install -y zenity libglib2.0-0t64 libxext6 libfontconfig1 libsm6 libxft2 libnotify-bin \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

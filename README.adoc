@@ -23,7 +23,7 @@ Nachdem du Quartus erfolgreich auf deinem System installiert hast, führe folgen
 
   $HOME/.local/share/quartus-prime-lite-ubuntu/mime-install
 
-== Häufige Probleme
+== Häufige Simulationsprobleme
 
 === Die Simulation gibt den Fehler `Error (suppressible): (vsim-12110)` aus
 
