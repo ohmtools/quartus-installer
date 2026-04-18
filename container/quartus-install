@@ -52,7 +52,7 @@ if [ -f "$INSTALLER_FILE" ]; then
 fi
 
 if [ "$SHOULD_DOWNLOAD" = "0" ]; then
-  zenity --title "Altera Software Lizenzvereinbarung" --question --text "Akzeptierst du die Altera Software Lizenzvereinbarung ?" --default-cancel 2>/dev/null
+  zenity --title "Altera Software Lizenzvereinbarung" --question --text "Akzeptierst du die Altera Software Lizenzvereinbarung?" --default-cancel 2>/dev/null
 
   xdg-open "$DOWNLOAD_LINK" 2>/dev/null &
 
