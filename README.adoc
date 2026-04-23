@@ -43,15 +43,21 @@ Im Hauptfenster von Quartus Prime Lite:
 
 Im Hauptfenster von Quartus Prime Lite:
 
-Bei den Verwendeten Inputs / Outputs im Schaltplan gibt es Lücken (z.B. LEDR[0..5] und LEDR[9] => Lücke von LEDR[6..8]). 
+* Bei den Verwendeten Inputs / Outputs im Schaltplan gibt es Lücken (z.B. LEDR[0..5] und LEDR[9] => Lücke von LEDR[6..8]). 
+* Zum Beheben, Inputs / Outputs platzieren, die diese Lücken verwenden. 
+* Die Inputs / Outputs dürfen auch an nichts angeschlossen sein.
 
-Zum Beheben, Inputs / Outputs platzieren, die diese Lücken verwenden. Die Inputs / Outputs dürfen auch an nichts angeschlossen sein.
-
-=== Fehlernachricht `Run Analysis and Synthesis ...`
+=== Fehlernachricht `+Run Analysis and Synthesis ...+`
 
 Im Hauptfenster von Quartus Prime Lite:
 
-`Processing > Start Compilation`
+  Processing > Start Compilation
+
+=== Fehlernachricht `+Error (199013): HDL output file name "..." used with --testbench_file option contains a non-existent directory+`
+
+Im Simulationsfenster:
+
+  Simulation > Simulation Settings > Restore Defaults
 
 == Deinstallation
 
