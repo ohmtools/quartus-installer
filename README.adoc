@@ -2,7 +2,7 @@
 
 Dieses Projekt vereinfacht die Softwareinstallation und Nutzung von "Quartus Prime Lite".
 
-Es richtet außerdem automatisch MIME-Unterstützung ein und behebt häufige Fehlerquellen, wie `-novopt` und falsche Simulationspfade.
+Es richtet außerdem MIME-Unterstützung ein und behebt häufige Fehlerquellen, wie `-novopt` und falsche Simulationspfade.
 
 == Installation
 
