@@ -19,7 +19,7 @@ Es richtet außerdem MIME-Unterstützung ein und behebt häufige Fehlerquellen, 
 . `+distrobox assemble create --file "https://codeberg.org/tobilinz/quartus-installer/raw/branch/main/distrobox.ini"+`
 . `quartus-install`
 . Den Anweisungen folgen
-  * TH-Nürnberg Studenten sollten mindestens `quartus,questa_fse,cyclone` installieren 
+  * Studenten der TH-Nürnberg sollten mindestens `quartus,questa_fse,cyclone` installieren 
 
 == Häufige Simulationsfehler
 
