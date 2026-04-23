@@ -1,0 +1,212 @@
+#!/usr/bin/env python3
+# Native file picker opener
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
+"""
+file-picker — pick a single file via the XDG Desktop Portal.
+
+Usage:
+    file-picker <title> <filter>
+
+Examples:
+    file-picker "Open Image" "*.png *.jpg"
+    file-picker "Open Script" "*.sh"
+"""
+
+import sys
+import random
+import string
+from typing import NoReturn
+from urllib.parse import unquote, urlparse
+
+
+TIMEOUT_SECONDS = 120
+
+
+def die(msg: str) -> NoReturn:
+    print(f"file-picker: {msg}", file=sys.stderr)
+    sys.exit(1)
+
+
+def parse_filters(raw: str) -> list[tuple[str, list[tuple[int, str]]]]:
+    """
+    Convert a glob string like "*.png *.jpg *.sh" into the nested structure XDG FileChooser expects.
+    """
+    patterns = raw.strip().split()
+    if not patterns:
+        return []
+
+    label = " ".join(patterns)
+    entries = [(0, p) for p in patterns]
+    return [(label, entries)]
+
+
+def pick_file(title: str, raw_filter: str) -> str | None:
+    """
+    Open the XDG Desktop Portal FileChooser and return the chosen path,
+    or None if the user cancelled.
+    Raises RuntimeError on DBus / portal errors.
+    """
+    try:
+        from dbus.mainloop.glib import DBusGMainLoop
+    except ImportError:
+        raise RuntimeError("DBusGMainLoop not found.")
+
+    try:
+        from gi.repository import GLib
+    except ImportError:
+        raise RuntimeError("GLib not found.")
+
+    DBusGMainLoop(set_as_default=True)
+    loop = GLib.MainLoop()
+
+    try:
+        import dbus
+    except ImportError:
+        raise RuntimeError("Python 'dbus' module not found. ")
+
+    try:
+        bus = dbus.SessionBus()
+    except dbus.DBusException as e:
+        raise RuntimeError(f"Cannot connect to the D-Bus session bus: {e}")
+
+    try:
+        portal = bus.get_object(
+            "org.freedesktop.portal.Desktop",
+            "/org/freedesktop/portal/desktop",
+        )
+        file_chooser = dbus.Interface(
+            portal,
+            "org.freedesktop.portal.FileChooser",
+        )
+    except dbus.DBusException as e:
+        raise RuntimeError(f"XDG Desktop Portal not available: {e}")
+
+    token = "dbus_file_picker_" + "".join(random.choices(string.ascii_lowercase, k=8))
+
+    options = dbus.Dictionary(
+        {
+            "handle_token": dbus.String(token),
+            "multiple": dbus.Boolean(False),
+            "modal": dbus.Boolean(True),
+            "filters": dbus.Array(
+                [
+                    dbus.Struct(
+                        [
+                            dbus.String(label),
+                            dbus.Array(
+                                [
+                                    dbus.Struct(
+                                        [dbus.UInt32(t), dbus.String(p)], signature="us"
+                                    )
+                                    for t, p in entries
+                                ],
+                                signature="(us)",
+                            ),
+                        ],
+                        signature="sa(us)",
+                    )
+                    for label, entries in parse_filters(raw_filter)
+                ],
+                signature="(sa(us))",
+            ),
+        },
+        signature="sv",
+    )
+
+    result: dict[str, str] = {}
+    timeout_id: list[int] = []
+
+    def on_response(response_code, results):
+        if timeout_id:
+            GLib.source_remove(timeout_id[0])
+
+        # XDG portal response codes:
+        #   0 = success
+        #   1 = user cancelled (dismissed the dialog)
+        #   2 = error
+        if response_code == 0:
+            uris = results.get("uris", [])
+            if uris:
+                parsed = urlparse(str(uris[0]))
+                if parsed.scheme != "file":
+                    result["error"] = f"Unexpected URI scheme: {parsed.scheme}"
+                else:
+                    # URIs are percent-encoded; decode to get the real filesystem path.
+                    result["path"] = unquote(parsed.path)
+        elif response_code == 2:
+            result["error"] = "Portal returned an error response."
+
+        loop.quit()
+
+    sender = bus.get_unique_name().replace(".", "_").lstrip(":")
+    request_path = f"/org/freedesktop/portal/desktop/request/{sender}/{token}"
+
+    try:
+        bus.add_signal_receiver(
+            on_response,
+            signal_name="Response",
+            dbus_interface="org.freedesktop.portal.Request",
+            path=request_path,
+        )
+    except dbus.DBusException as e:
+        raise RuntimeError(f"Could not subscribe to portal response signal: {e}")
+
+    try:
+        actual_path = file_chooser.OpenFile(
+            "",
+            title,
+            options,
+        )
+    except dbus.DBusException as e:
+        raise RuntimeError(f"OpenFile call failed: {e}")
+
+    if str(actual_path) != request_path:
+        raise RuntimeError(
+            f"Request path mismatch: expected {request_path}, got {actual_path}"
+        )
+
+    def on_timeout() -> bool:
+        result["error"] = (
+            f"Timed out after {TIMEOUT_SECONDS} seconds waiting for portal response."
+        )
+        loop.quit()
+        return False
+
+    timeout_id.append(GLib.timeout_add_seconds(TIMEOUT_SECONDS, on_timeout))
+
+    loop.run()
+
+    if "error" in result:
+        raise RuntimeError(result["error"])
+
+    return result.get("path")
+
+
+def main() -> None:
+    if len(sys.argv) != 3:
+        print(__doc__, file=sys.stderr)
+        sys.exit(1)
+
+    _, title, raw_filter = sys.argv
+
+    try:
+        path = pick_file(title, raw_filter)
+    except RuntimeError as e:
+        die(str(e))
+
+    if path is not None:
+        print(path)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,10 +1,13 @@
-= Quartus Prime Lite Installer
+= Quartus Installer
+
+Dieses Projekt vereinfacht die Softwareinstallation und Nutzung von "Quartus Prime Lite". 
+Es richtet außerdem automatisch MIME-Unterstützung ein und behebt häufige Fehlerquellen, wie `-novopt` und falsche Simulationspfade.
 
 == Installation
 
 === Systemanforderungen
 
-* 35GB Speicherplatz
+* 35GB Speicherplatz (minimum 25GB)
 * Irgendeine Linux-Distribution als Betriebssystem
 * https://distrobox.it/#installation[`distrobox`]
 ** Am besten über den Paketmanager der jeweiligen Distribution installieren
@@ -12,28 +15,21 @@
 
 === Konsole
 
-. `+distrobox assemble create --file "https://codeberg.org/tobilinz/quartus-prime-lite-installer/raw/branch/main/distrobox.ini"+`
+. `+distrobox assemble create --file "https://codeberg.org/tobilinz/quartus-installer/raw/branch/main/distrobox.ini"+`
 . `quartus-install`
 . Den Anweisungen folgen
+  * TH-Nürnberg Studenten sollten mindestens `quartus,questa_fse,cyclone` installieren 
 
-=== Optional: MIME-Unterstützung
+== Häufige Simulationsfehler
 
-Mit MIME-Unterstützung kannst du `.qpf` und `.vwf` Dateien mit einem Doppelklick in Quartus öffnen.
+=== Lizenz fehlt
 
-Nachdem du Quartus erfolgreich auf deinem System installiert hast, führe folgenden Befehl in einem Host-Konsolenfenster aus:
+Beispiele:
 
-  $HOME/.local/share/quartus-prime-lite-ubuntu/mime-install
-
-== Häufige Simulationsprobleme
-
-=== Die Simulation gibt den Fehler `Error (suppressible): (vsim-12110)` aus
-
-Im Simulationsfenster:
-
-. `+Simulation > Simulation Settings+`
-. `-suppress 12110` bei der Zeile, die mit `vsim` beginnt, anhängen.
-
-=== Die Simulation gibt den Fehler `Error: Invalid license environment` oder `Error: Failure to obtain a Verilog simulation license` aus
+* `Error: Invalid license environment`
+* `Error: Unable to obtain a license`
+* `Error: Failure to obtain a Verilog simulation license`
+* `Error: Failure to obtain a VHDL simulation license`
 
 Im Hauptfenster von Quartus Prime Lite:
 
@@ -42,11 +38,25 @@ Im Hauptfenster von Quartus Prime Lite:
 ** Häkchen bei `Automatically Refresh Server License Token` setzen
 ** `Get no-cost licenses` wählen, warten, Häkchen bei erster Lizenz im Pop-Up setzen, `Ok`
 
+=== Fehlernachricht `+Line: 281bus_port->has_type()Stack Trace: 0x1610a: TBO_...+`
+
+Im Hauptfenster von Quartus Prime Lite:
+
+Bei den Verwendeten Inputs / Outputs im Schaltplan gibt es Lücken (z.B. LEDR[0..5] und LEDR[9] => Lücke von LEDR[6..8]). 
+
+Zum Beheben, Inputs / Outputs platzieren, die diese Lücken verwenden. Die Inputs / Outputs dürfen auch an nichts angeschlossen sein.
+
+=== Fehlernachricht `Run Analysis and Synthesis ...`
+
+Im Hauptfenster von Quartus Prime Lite:
+
+`Processing > Start Compilation`
+
 == Deinstallation
 
-Führe folgenden Befehl in einem Host-Konsolenfenster aus:
+Führe den folgenden Befehl in einem Host-Konsolenfenster aus (quartus-install muss vorher mindestens einmal ausgeführt worden sein):
 
-  $HOME/.local/share/quartus-prime-lite-ubuntu/uninstall
+quartus-uninstall | xargs -d '\n' "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall"
 
 Ohne diesen Befehl wird das Programm nicht vollständig vom System entfernt.
 
@@ -57,12 +67,29 @@ Ohne diesen Befehl wird das Programm nicht vollständig vom System entfernt.
 * distrobox
 * just
 
-=== Projekt manuell installieren
+=== Justfile
 
-Containerfile zu Image kompilieren:
+Für mehr Info, im Projektordner `just` in der Konsole ausführen.
 
-  just build
+== Rechtliche Hinweise
 
-Image installieren:
+=== Haftungsausschluss
 
-  just assemble
+WICHTIG: Dieses Projekt steht in *keiner* Verbindung zu der Intel Corporation, Altera oder deren Tochtergesellschaften. Es handelt sich um ein unabhängiges Community-Projekt.
+
+* **Keine proprietäre Software:** Dieses Repository enthält ausschließlich Hilfsskripte und Konfigurationsdateien. Es enthält *keine* proprietären Binärdateien, Bibliotheken oder Lizenzschlüssel von Quartus Prime.
+* **Lizenzierung:** Die Nutzung von Quartus Prime unterliegt der "Altera Software License Agreement". Nutzer müssen über eine eigene gültige Lizenz bzw. Kopie des Software-Installationsprogrammes verfügen.
+
+=== Lizenz
+
+This project simplifies the software installation and usage of "Quartus Prime Lite".
+
+Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+
+This file is part of Quartus Installer.
+
+Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.

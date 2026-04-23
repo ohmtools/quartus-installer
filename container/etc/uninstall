@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# Host container uninstaller
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
+# This will only ever be executed directly from the host machine. Never from the container
+
+if [[ -n $CONTAINER_ID ]]; then
+  echo "Diese Datei kann nur vom Host-System aus ausgeführt werden." >&2
+  exit 1
+fi
+
+# Different name than CONTAINER_ID because of name collision
+export CONTAINER_NAME="$1"
+export CONTAINER_HOME="$2"
+
+if [[ -z $CONTAINER_NAME || -z $CONTAINER_HOME ]]; then
+  echo "Usage: $0 <container_id> <container_home>" >&2
+  exit 1
+fi
+
+script_path="$(realpath "$0")"
+
+if [[ $script_path != "/tmp/"* ]]; then
+  temp_script="$(mktemp /tmp/uninstall.XXXXXX.sh)"
+  cp "$script_path" "$temp_script"
+  chmod +x "$temp_script"
+  exec "$temp_script" "$@"
+fi
+
+trap 'rm -f -- "$0"' EXIT
+
+echo "Deinstalliere..."
+echo ""
+
+distrobox rm -f "$CONTAINER_NAME"
+podman image rm -i codeberg.org/tobilinz/quartus-installer:latest localhost/quartus-installer:local 2>/dev/null || true
+docker image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true
+
+share="${XDG_DATA_HOME:-$HOME/.local/share}"
+
+rm -f "$share/mime/packages/quartus.xml" "$share/icons/hicolor/64x64/mimetypes/application-x-quartus.png" "$share/icons/quartusii.png"
+update-mime-database "$share/mime"
+gtk-update-icon-cache "$share/icons/hicolor" -f -t
+
+if [[ $(realpath "$CONTAINER_HOME") == $(realpath "$HOME") ]]; then
+  echo "Die Deinstallation würde den HOME Ordner des aktuellen Benutzers löschen. Abgebrochen." >&2
+  exit 1
+else
+  rm -rf "$CONTAINER_HOME"
+fi
+
+echo ""
+echo "Deinstallation abgeschlossen."

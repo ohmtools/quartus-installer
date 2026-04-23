@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+# Replaces deprecated `-novopt` argument with `-voptargs=+acc`
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
+set -euo pipefail
+
+args=("$@")
+len=${#args[@]}
+
+FILE_NAME=""
+DO_INDEX=-1
+for ((i = 0; i < len; i++)); do
+  if [[ ${args[i]} == "-do" ]]; then
+    if ((i + 1 < len)); then
+      FILE_NAME="${args[i + 1]}"
+      DO_INDEX=$((i + 1))
+    fi
+    break
+  fi
+done
+
+if [[ -z $FILE_NAME || ! -f "./$FILE_NAME" ]]; then
+  echo "vsim shim: Could not find the file referenced by -do. No fixes will be applied."
+  exec /usr/local/lib/shim/call-target "$0" "$@"
+fi
+
+SHIM_FILE="./shim-target_${FILE_NAME}"
+trap 'rm -f -- "$SHIM_FILE"' EXIT
+
+# Only does basic processing and doesn't properly parse things like blocks and functions. But thats good enough for now
+>"$SHIM_FILE"
+while IFS= read -r line || [[ -n $line ]]; do
+  if [[ $line =~ ^vsim[[:space:]] ]]; then
+    DELIMITER=$'\x1E'
+    mapfile -td "$DELIMITER" line_args < <(xargs printf "%s$DELIMITER" <<<"$line")
+
+    processed_args=()
+    for arg in "${line_args[@]}"; do
+      if [[ $arg = "-novopt" ]]; then
+        echo "vsim shim: Deprecated '-novopt' flag detected. Replacing it with '-voptargs=+acc'"
+        echo ""
+
+        processed_args+=("-voptargs=+acc")
+        continue
+      fi
+      processed_args+=("$arg")
+    done
+
+    reconstructed=""
+    for parg in "${processed_args[@]}"; do
+      if [[ $parg == *" "* ]]; then
+        reconstructed+=" \"$parg\""
+      else
+        reconstructed+=" $parg"
+      fi
+    done
+    reconstructed="${reconstructed# }"
+
+    echo "$reconstructed" >>"$SHIM_FILE"
+  else
+    echo "$line" >>"$SHIM_FILE"
+  fi
+done <"./$FILE_NAME"
+
+args[$DO_INDEX]="$(basename "$SHIM_FILE")"
+
+exec /usr/local/lib/shim/call-target "$0" "${args[@]}"

@@ -1,4 +1,16 @@
+# CI/CD container definition
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
 FROM quay.io/podman/stable:latest
 
 RUN dnf install -y git nodejs \
-    && dnf clean all
+  && dnf clean all

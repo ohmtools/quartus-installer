@@ -1,0 +1,286 @@
+#!/usr/bin/env bash
+# "Quartus Prime Lite" software installer wrapper
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
+set -euo pipefail
+
+source /usr/local/lib/dirs.bash
+
+# ─────────────────────────────────────────────
+# Uninstaller
+# ─────────────────────────────────────────────
+
+cp /usr/local/etc/uninstall "$CONTAINER_HOME/uninstall"
+
+# ─────────────────────────────────────────────
+# Configuration
+# ─────────────────────────────────────────────
+
+DOWNLOAD_LINK="https://www.altera.com/downloads/fpga-development-tools/quartus-prime-lite-edition-design-software-version-25-1-linux"
+APP_NAME="Quartus Prime Lite Installer"
+
+# ─────────────────────────────────────────────
+# Trap Handlers
+# ─────────────────────────────────────────────
+
+error_handler() {
+  notify-send --app-name "$APP_NAME" "Quartus Installation" \
+    "Es ist ein Fehler aufgetreten."
+
+  echo ""
+  echo ""
+  echo "-------------------------------------------"
+  echo "Ein Fehler ist aufgetreten."
+  echo "-------------------------------------------"
+  echo ""
+}
+
+exit_handler() {
+  echo ""
+  echo ""
+  echo "-------------------------------------------"
+  echo "Dieses Programm wurde beendet."
+  echo "Du kannst es erneut starten, indem du"
+  echo "'quartus-install' in das Terminal eingibst."
+  echo "-------------------------------------------"
+  echo ""
+}
+
+trap error_handler ERR
+trap exit_handler EXIT
+
+# ─────────────────────────────────────────────
+# Functions
+# ─────────────────────────────────────────────
+
+pick_installer_file() {
+  /usr/local/lib/file-picker "Wähle die heruntergeladene '.run' Datei aus" "*.run" ||
+    {
+      >&2 echo "An error occurred in the native file picker. Falling back to Zenity."
+
+      local zenity_dir="/"
+      if [[ -d $HOST_HOME/Downloads/ ]]; then
+        zenity_dir="$HOST_HOME/Downloads"
+      elif [[ -d $HOST_HOME ]]; then
+        zenity_dir="$HOST_HOME"
+      fi
+
+      # 'installer.run' is a dummy filename so Zenity opens $zenity_dir
+      zenity \
+        --title "Wähle die heruntergeladene '.run' Datei aus" \
+        --file-selection \
+        --filename "$zenity_dir/installer.run" \
+        --file-filter="*.run" \
+        2>/dev/null ||
+        {
+          zenity --title "Fehler" --error --text "Keine Datei ausgewählt." 2>/dev/null
+          exit 1
+        }
+    }
+}
+
+download_installer() {
+  # Automatically exits when the user declines because of 'set -e'
+  zenity \
+    --title "Altera Software Lizenzvereinbarung" \
+    --question \
+    --text "Akzeptierst du die Altera Software Lizenzvereinbarung?" \
+    --default-cancel \
+    2>/dev/null
+
+  xdg-open "$DOWNLOAD_LINK" 2>/dev/null &
+
+  local content1='Dein Browser ist gestartet. Lade die neuste Version von <b>Quartus Prime Installer (Recommended)</b> herunter.'
+  local content2
+  content2="$(printf '<a href="%s">Falls kein Browser startet, klicke hier.</a>' "$DOWNLOAD_LINK")"
+  local content3='Wenn du die Datei heruntergeladen hast, klicke auf <b>OK</b>'
+  zenity \
+    --title "Installer herunterladen" \
+    --info \
+    --text "$content1\n\n$content2\n\n$content3" \
+    2>/dev/null
+
+  local downloaded_installer_path
+  downloaded_installer_path="$(pick_installer_file)"
+
+  if [[ -z $downloaded_installer_path ]]; then
+    zenity --title "Fehler" --error --text "Du hast keine valide Datei ausgewählt." 2>/dev/null
+    exit 1
+  fi
+
+  cp_failed="false"
+  cp -f "$downloaded_installer_path" "$installer_file" || {
+    cp_failed="true"
+  }
+
+  if [[ $cp_failed == "true" ]]; then
+    zenity --title "Fehler" --error --text "Die Installer Datei konnte nicht kopiert werden." 2>/dev/null
+    exit 1
+  fi
+
+  echo ""
+}
+
+select_components() {
+  # Unfortunately, this is the only way to get to the component names.
+  # The awk command isolates the --components section from the help output.
+  local component_list
+  component_list="$(
+    "${installer[@]}" --help |
+      awk '/--components arg/{found=1} found{print; if(NF==0 || (found>1 && /^  --/)) exit; found++}' |
+      head -n -1 |
+      sed -e 's/^[[:space:]]*//' -e 's/_/__/g' |
+      tail -n +3
+  )"
+
+  local components
+  components="$(
+    zenity \
+      --title "Komponenten auswählen" \
+      --entry \
+      --text "$component_list\n\nEingabe (Komma-getrennt):" \
+      --entry-text "all" \
+      2>/dev/null
+  )" || {
+    zenity --title "Fehler" --error --text "Keine Komponenten ausgewählt." 2>/dev/null
+    exit 1
+  }
+
+  if [[ -z $components ]]; then
+    components="$(
+      echo "$component_list" |
+        grep -E "^Default (components|devices):" |
+        sed 's/Default [^:]*: //' |
+        paste -sd ','
+    )"
+  fi
+
+  components="$(echo "$components" | tr -d ' ' | tr '[:upper:]' '[:lower:]')"
+
+  if [[ -z $components ]]; then
+    zenity \
+      --title "Fehler" \
+      --error \
+      --text "Keine Komponenten ausgewählt oder gefunden.\n\nOriginaler help output (nur --components Sektion ist relevant):\n$("${installer[@]}" --help)" \
+      2>/dev/null
+    exit 1
+  fi
+
+  echo "$components"
+}
+
+install_desktop_file() {
+  local desktop_dir="$SHARE/applications"
+  local desktop_file="$desktop_dir/quartus.desktop"
+
+  mkdir -p "$desktop_dir"
+  cp -f /usr/local/etc/quartus.desktop "$desktop_file"
+  sed -i "s|^Icon=.*|Icon=$icon_file|" "$desktop_file"
+}
+
+install_mime_type() {
+  local mime_dir="$HOST_SHARE/mime/packages"
+  local mime_file="$mime_dir/quartus.xml"
+
+  mkdir -p "$mime_dir"
+  cp -f /usr/local/etc/quartus.xml "$mime_file"
+
+  local mime_icon_dir="$HOST_SHARE/icons/hicolor/64x64/mimetypes"
+  local mime_icon_path="$mime_icon_dir/application-x-quartus.png"
+
+  mkdir -p "$mime_icon_dir"
+
+  if [[ -e $icon_file ]]; then
+    cp -f "$icon_file" "$mime_icon_path"
+  fi
+
+  /usr/local/lib/host-run update-mime-database "$HOST_SHARE/mime"
+  /usr/local/lib/host-run gtk-update-icon-cache "$HOST_SHARE/icons/hicolor" -f -t
+}
+
+# ─────────────────────────────────────────────
+# Main
+# ─────────────────────────────────────────────
+
+echo ""
+echo "---------------------------------------------"
+echo "INSTALLATIONSHILFE"
+echo "---------------------------------------------"
+echo ""
+
+installer_file="$CACHE/quartus-prime-lite-installer"
+
+# ── Step 1: Obtain the installer .run file ────
+
+skip_download="false"
+if [[ -f $installer_file ]]; then
+  # Ask whether to re-download; skip if the user says no
+  zenity \
+    --title "Installer herunterladen?" \
+    --question \
+    --text "Willst du den Quartus Installer nochmal herunterladen?" \
+    --default-cancel \
+    2>/dev/null ||
+    skip_download="true"
+fi
+
+if [[ $skip_download = "false" ]]; then
+  download_installer
+fi
+
+if [[ ! -f $installer_file ]]; then
+  zenity \
+    --title "Fehler" \
+    --error \
+    --text "'$installer_file' wurde nicht gefunden. Skript wird beendet." \
+    2>/dev/null
+  exit 1
+fi
+
+chmod +x "$installer_file"
+
+# ── Step 2: Select components ─────────────────
+
+echo "Bitte warten. Ein neues Pop-Up öffnet sich gleich."
+
+installer=("$installer_file" --quiet --)
+
+components="$(select_components)"
+
+# ── Step 3: Run the installer ─────────────────
+
+zenity \
+  --title "Installation starten?" \
+  --question \
+  --text "Nach Bestätigung startet die Installation.\nDas dauert eine Weile.\nVerfolge den Fortschritt in der Konsole." \
+  2>/dev/null
+
+"${installer[@]}" \
+  --bypass \
+  --cli \
+  --delete-downloads \
+  --accept-eula \
+  --download-dir "$QUARTUS_INSTALLER_CACHE" \
+  --install-dir "$QUARTUS_DIR" \
+  --components "$components"
+
+# ── Step 4: Register the application ──────────
+
+icon_file="$QUARTUS_DIR/quartus/adm/quartusii.png"
+
+install_desktop_file
+install_mime_type
+
+distrobox-export --app quartus
+
+notify-send --app-name "$APP_NAME" "Quartus Installation" \
+  "Das Programm wurde erfolgreich installiert."

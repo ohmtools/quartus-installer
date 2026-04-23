@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# "Quartus Prime Lite" software launcher and shim initializer
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
+set -euo pipefail
+
+source /usr/local/lib/dirs.bash
+
+# Setup shims
+echo "Setting up shims..."
+
+shim_dir="/usr/local/etc/quartus-shims"
+while IFS= read -r -d '' shim_file; do
+  echo ""
+  echo "Setting up shim for $shim_file"
+
+  relative_shim_file="$(realpath --relative-to="$shim_dir" "$shim_file")"
+  quartus_file="$QUARTUS_DIR/$relative_shim_file"
+  target_file="$(/usr/local/lib/shim/get-path "$quartus_file")"
+
+  if [[ -L $quartus_file ]]; then
+    echo "File is a symlink."
+
+    symlink_target="$(readlink -f "$quartus_file")"
+    if [[ $symlink_target == $shim_file ]]; then
+      echo "File is already shimmed."
+
+      continue
+    fi
+
+    ln -snf "$symlink_target" "$target_file"
+  elif [[ ! -e $quartus_file ]]; then
+    echo "File '$quartus_file' not found."
+    continue
+  else
+    mv -f "$quartus_file" "$target_file"
+  fi
+
+  ln -snf "$shim_file" "$quartus_file"
+done < <(find "$shim_dir" -type f -print0)
+
+echo ""
+echo "Done."
+
+# Run actual program
+export SALT_LICENSE_SERVER="$CONTAINER_HOME/.altera.quartus/questa_lic.dat"
+exec "$QUARTUS_DIR/quartus/bin/quartus" --64bit "$@"

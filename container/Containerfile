@@ -1,19 +1,51 @@
+# Runtime container definition
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
 FROM quay.io/toolbx/ubuntu-toolbox:24.04
 
-# Forgejo Next
-LABEL org.opencontainers.image.source="https://codeberg.org/tobilinz/quartus-prime-lite-installer"
-LABEL org.opencontainers.image.description="Quartus Prime Lite package for a semi-automated install"
+LABEL org.opencontainers.image.source="https://codeberg.org/tobilinz/quartus-installer"
+LABEL org.opencontainers.image.description="Environment for simplifying the software installation and usage of \"Quartus Prime Lite\""
 
-RUN apt-get update \
-    && apt-get install -y zenity libglib2.0-0t64 libxext6 libfontconfig1 libsm6 libxft2 libnotify-bin \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN <<EOF
+set -e
 
-COPY quartus-init /usr/local/bin/quartus-init
-COPY quartus-install /usr/local/bin/quartus-install
-COPY mime-install /usr/local/bin/quartus-mime-install
-COPY uninstall /usr/local/bin/quartus-uninstall
+apt-get update
 
-RUN mkdir -p /etc/quartus
-COPY quartus.desktop /etc/quartus/quartus.desktop
-COPY quartus.xml /etc/quartus/quartus.xml
+# Locale
+apt-get install -y --no-install-recommends locales=2.39-0ubuntu8.7
+sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
+locale-gen
+
+# Quartus
+apt-get install -y --no-install-recommends \
+  libxft2=2.3.6-1build1 \
+  libsm6=2:1.2.3-1build3 \
+  libfontconfig1=2.15.0-1.1ubuntu2 \
+  libxext6=2:1.3.4-1build2
+
+# Installer
+apt-get install -y --no-install-recommends \
+  zenity=4.0.1-1build3 \
+  libnotify-bin=0.8.3-1build2 \
+  python3-dbus=1.3.2-5build3 \
+  python3-gi=3.48.2-1
+
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+EOF
+
+ENV LANG=en_US.UTF-8
+
+COPY bin /usr/local/bin
+COPY etc /usr/local/etc
+COPY lib /usr/local/lib

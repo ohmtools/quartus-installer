@@ -1,3 +1,15 @@
+# CI/CD process for publishing the runtime container
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
 on:
   release:
     types: [published]
@@ -7,7 +19,7 @@ jobs:
     name: Publish
     runs-on: docker
     container:
-      image: codeberg.org/tobilinz/quartus-prime-lite-installer-cicd:latest
+      image: codeberg.org/tobilinz/quartus-installer-cicd:latest
       options: --privileged
     steps:
       - name: Checkout Repository
@@ -31,17 +43,18 @@ jobs:
 
       - name: Create Manifest
         run: |
-          podman manifest create quartus-prime-lite-installer:latest
-          podman manifest add quartus-prime-lite-installer:latest containers-storage:localhost/amd64-tmp
-          podman manifest add quartus-prime-lite-installer:latest containers-storage:localhost/arm64-tmp
+          podman manifest create quartus-installer:latest
+          podman manifest add quartus-installer:latest containers-storage:localhost/amd64-tmp
+          podman manifest add quartus-installer:latest containers-storage:localhost/arm64-tmp
 
       - name: Publish
         run: |
           podman login codeberg.org --username tobilinz --password ${{ secrets.QUARTUS_PACKAGE_TOKEN }}
-          podman manifest push quartus-prime-lite-installer:latest docker://codeberg.org/tobilinz/quartus-prime-lite-installer:${{ forgejo.ref_name }}
-          podman manifest push quartus-prime-lite-installer:latest docker://codeberg.org/tobilinz/quartus-prime-lite-installer:latest
+          podman manifest push quartus-installer:latest docker://codeberg.org/tobilinz/quartus-installer:${{ forgejo.ref_name }}
+          podman manifest push quartus-installer:latest docker://codeberg.org/tobilinz/quartus-installer:latest
 
       - name: Cleanup
         if: always()
         run: |
           podman rmi amd64-tmp arm64-tmp || true
+          podman manifest rm quartus-installer:latest || true
