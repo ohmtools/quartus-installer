@@ -57,7 +57,7 @@ Im Hauptfenster von Quartus Prime Lite:
 
 Führe den folgenden Befehl in einem Host-Konsolenfenster aus (quartus-install muss vorher mindestens einmal ausgeführt worden sein):
 
-quartus-uninstall | xargs -d '\n' "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall"
+  quartus-uninstall | xargs -d '\n' "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall"
 
 Ohne diesen Befehl wird das Programm nicht vollständig vom System entfernt.
 
