@@ -79,7 +79,7 @@ Für mehr Info, im Projektordner `just` in der Konsole ausführen.
 WICHTIG: Dieses Projekt steht in *keiner* Verbindung zu der Intel Corporation, Altera oder deren Tochtergesellschaften. Es handelt sich um ein unabhängiges Community-Projekt.
 
 * **Keine proprietäre Software:** Dieses Repository enthält ausschließlich Hilfsskripte und Konfigurationsdateien. Es enthält *keine* proprietären Binärdateien, Bibliotheken oder Lizenzschlüssel von Quartus Prime.
-* **Lizenzierung:** Die Nutzung von Quartus Prime unterliegt der "Altera Software License Agreement". Nutzer müssen über eine eigene gültige Lizenz bzw. Kopie des Software-Installationsprogrammes verfügen.
+* **Lizenzierung:** Die Nutzung von Quartus Prime unterliegt der Altera Software Lizenzvereinbarung. Nutzer müssen über eine eigene gültige Lizenz bzw. Kopie des Software-Installationsprogrammes verfügen.
 
 === Lizenz
 
