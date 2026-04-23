@@ -97,7 +97,7 @@ download_installer() {
     --default-cancel \
     2>/dev/null
 
-  xdg-open "$DOWNLOAD_LINK" 2>/dev/null &
+  (cd "$CONTAINER_HOME" && xdg-open "$DOWNLOAD_LINK" 2>/dev/null &)
 
   local content1='Dein Browser ist gestartet. Lade die neuste Version von <b>Quartus Prime Installer (Recommended)</b> herunter.'
   local content2
