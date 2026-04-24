@@ -94,7 +94,7 @@ Ohne diesen Befehl wird das Programm nicht vollständig vom System entfernt.
 
 === Justfile
 
-Für mehr Info, im Projektordner `just` in der Konsole ausführen.
+Für mehr Infos, im Projektordner `just` in der Konsole ausführen.
 
 == Rechtliche Hinweise
 
