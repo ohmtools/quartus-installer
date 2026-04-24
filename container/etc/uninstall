@@ -39,7 +39,7 @@ fi
 
 trap 'rm -f -- "$0"' EXIT
 
-container_home="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$CONTAINER_HOME"')"
+container_home="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOME"')"
 
 echo "Deinstalliere..."
 echo ""
@@ -49,19 +49,22 @@ resolved_home="$(realpath "$HOME")"
 if [[ "$resolved_container_home" != "$resolved_home" ]]; then
   # Delete files from within the container with sudo first because that will avoid permission issues on the host system.
   # $container_home itself cannot be deleted because the container still uses it.
-  distrobox-enter -n "$CONTAINER_ID" -- bash -c 'sudo find "$1" -mindepth 1 -delete' -- "$container_home"
+  distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'sudo find "$1" -mindepth 1 -delete' -- "$container_home"
 fi
 
-distrobox rm -f "$CONTAINER_NAME"
+# Suppress misleading find warning
+distrobox rm -f "$CONTAINER_NAME" 2>/dev/null
 podman image rm -i codeberg.org/tobilinz/quartus-installer:latest localhost/quartus-installer:local 2>/dev/null || true
 docker image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true
 docker image rm localhost/quartus-installer:local 2>/dev/null || true
 
 share="${XDG_DATA_HOME:-$HOME/.local/share}"
 
-rm -f "$share/mime/packages/quartus.xml" "$share/icons/hicolor/64x64/mimetypes/application-x-quartus.png" "$share/icons/quartusii.png"
+icons="$share/icons/hicolor/64x64"
+rm -f "$share/mime/packages/quartus.xml" "$icons/mimetypes/application-x-quartus.png"
+
 update-mime-database "$share/mime"
-gtk-update-icon-cache "$share/icons/hicolor" -f -t
+gtk-update-icon-cache "$icons" -f -t
 
 if [[ "$resolved_container_home" != "$resolved_home" ]]; then
   rmdir "$container_home"

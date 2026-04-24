@@ -74,17 +74,12 @@ Im Simulationsfenster:
 === Vorraussetzungen
 
 * Der `home` Ordner des Containers wurde bei der Installation nicht geändert
-* `quartus-install` wurde mindestens einmal ausgeführt
 
 === Konsole (Host)
 
   "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/upgrade" quartus-prime-lite-ubuntu
 
 == Deinstallation
-
-=== Vorraussetzungen
-
-* `quartus-install` wurde mindestens einmal ausgeführt
 
 === Konsole (Host)
 

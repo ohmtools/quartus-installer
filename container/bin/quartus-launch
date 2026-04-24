@@ -15,6 +15,14 @@ set -euo pipefail
 
 source /usr/local/lib/dirs.bash
 
+# Check if Quartus is installed
+quartus_bin="$QUARTUS_DIR/quartus/bin/quartus"
+if [[ ! -e "$quartus_bin" ]]; then
+  notify-send --app-name "Quartus Launcher" "Quartus ist noch nicht installiert." \
+    "Installiere es in der Konsole mit 'quartus-install'."
+  exit 1
+fi
+
 # Setup shims
 echo "Setting up shims..."
 
@@ -52,5 +60,5 @@ echo ""
 echo "Done."
 
 # Run actual program
-export SALT_LICENSE_SERVER="$CONTAINER_HOME/.altera.quartus/questa_lic.dat"
-exec "$QUARTUS_DIR/quartus/bin/quartus" --64bit "$@"
+export SALT_LICENSE_SERVER="$HOME/.altera.quartus/questa_lic.dat"
+exec "$quartus_bin" --64bit "$@"

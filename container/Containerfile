@@ -49,3 +49,4 @@ ENV LANG=en_US.UTF-8
 COPY bin /usr/local/bin
 COPY etc /usr/local/etc
 COPY lib /usr/local/lib
+COPY share /usr/local/share

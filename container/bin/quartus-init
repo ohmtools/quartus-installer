@@ -1,4 +1,5 @@
-# Host .desktop entry
+#!/usr/bin/env bash
+# Container initializer
 #
 # Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
 #
@@ -10,13 +11,16 @@
 #
 # You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
 
-[Desktop Entry]
-Name=Quartus Prime Lite
-Comment=FPGA Design Software
-Exec=quartus-launch %f
-Icon=
-Terminal=false
-StartupNotify=true
-Type=Application
-Categories=Development;Electronics;
-MimeType=application/x-quartus-qpf;application/x-quartus-vwf;
+set -euo pipefail
+
+host_user="$(stat -c '%u' "$HOME")"
+host_group="$(stat -c '%g' "$HOME")"
+
+trap 'chown -R "$host_user:$host_group" "$HOME"' EXIT
+
+source /usr/local/lib/dirs.bash
+
+sed -i "s|^Icon=.*|Icon=$QUARTUS_ICON|" /usr/local/share/applications/quartus.desktop
+
+cp -f /usr/local/etc/uninstall "$HOME/uninstall"
+cp -f /usr/local/etc/upgrade "$HOME/upgrade"

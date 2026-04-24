@@ -16,18 +16,11 @@ set -euo pipefail
 source /usr/local/lib/dirs.bash
 
 # ─────────────────────────────────────────────
-# Host Executables
-# ─────────────────────────────────────────────
-
-cp /usr/local/etc/uninstall "$CONTAINER_HOME/uninstall"
-cp /usr/local/etc/upgrade "$CONTAINER_HOME/upgrade"
-
-# ─────────────────────────────────────────────
 # Configuration
 # ─────────────────────────────────────────────
 
 DOWNLOAD_LINK="https://www.altera.com/downloads/fpga-development-tools/quartus-prime-lite-edition-design-software-version-25-1-linux"
-APP_NAME="Quartus Prime Lite Installer"
+APP_NAME="Quartus Installer"
 
 # ─────────────────────────────────────────────
 # Trap Handlers
@@ -98,7 +91,7 @@ download_installer() {
     --default-cancel \
     2>/dev/null
 
-  (cd "$CONTAINER_HOME" && xdg-open "$DOWNLOAD_LINK" 2>/dev/null &)
+  (cd "$HOME" && xdg-open "$DOWNLOAD_LINK" 2>/dev/null &)
 
   local content1='Dein Browser ist gestartet. Lade die neuste Version von <b>Quartus Prime Installer (Recommended)</b> herunter.'
   local content2
@@ -179,33 +172,26 @@ select_components() {
   echo "$components"
 }
 
-install_desktop_file() {
-  local desktop_dir="$SHARE/applications"
-  local desktop_file="$desktop_dir/quartus.desktop"
+install_icon() {
+  local icon_file="$QUARTUS_DIR/quartus/adm/quartusii.png"
+  mkdir -p "$(dirname "$QUARTUS_ICON")"
+  ln -sf "$icon_file" "$QUARTUS_ICON"
 
-  mkdir -p "$desktop_dir"
-  cp -f /usr/local/etc/quartus.desktop "$desktop_file"
-  sed -i "s|^Icon=.*|Icon=$icon_file|" "$desktop_file"
+  local mime_icon="$HOST_SHARE/icons/hicolor/64x64/mimetypes/application-x-quartus.png"
+  local mime_icon_dir="$(dirname "$mime_icon")"
+  mkdir -p "$mime_icon_dir"
+  ln -sf "$QUARTUS_ICON" "$mime_icon"
+  /usr/local/lib/host-run gtk-update-icon-cache "$mime_icon_dir" -f -t
 }
 
 install_mime_type() {
-  local mime_dir="$HOST_SHARE/mime/packages"
-  local mime_file="$mime_dir/quartus.xml"
+  local mime_dir="$HOST_SHARE/mime"
+  local mime_file="$mime_dir/packages/quartus.xml"
 
-  mkdir -p "$mime_dir"
+  mkdir -p "$(dirname "$mime_file")"
   cp -f /usr/local/etc/quartus.xml "$mime_file"
 
-  local mime_icon_dir="$HOST_SHARE/icons/hicolor/64x64/mimetypes"
-  local mime_icon_path="$mime_icon_dir/application-x-quartus.png"
-
-  mkdir -p "$mime_icon_dir"
-
-  if [[ -e "$icon_file" ]]; then
-    cp -f "$icon_file" "$mime_icon_path"
-  fi
-
-  /usr/local/lib/host-run update-mime-database "$HOST_SHARE/mime"
-  /usr/local/lib/host-run gtk-update-icon-cache "$HOST_SHARE/icons/hicolor" -f -t
+  /usr/local/lib/host-run update-mime-database "$mime_dir"
 }
 
 # ─────────────────────────────────────────────
@@ -274,14 +260,10 @@ zenity \
   --install-dir "$QUARTUS_DIR" \
   --components "$components"
 
-# ── Step 4: Register the application ──────────
+# ── Step 4: Finish Installation ──────────
 
-icon_file="$QUARTUS_DIR/quartus/adm/quartusii.png"
-
-install_desktop_file
+install_icon
 install_mime_type
-
-distrobox-export --app quartus
 
 notify-send --app-name "$APP_NAME" "Quartus Installation" \
   "Das Programm wurde erfolgreich installiert."
