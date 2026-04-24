@@ -262,8 +262,8 @@ zenity \
 
 # ── Step 4: Finish Installation ──────────
 
-install_icon
 install_mime_type
+install_icon
 
 notify-send --app-name "$APP_NAME" "Quartus Installation" \
   "Das Programm wurde erfolgreich installiert."
