@@ -10,13 +10,17 @@
 #
 # You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
 
-export HOST_HOME="$(/usr/local/lib/host-run bash -c 'printf "%s" "$HOME"')"
+export HOST_HOME="$DISTROBOX_HOST_HOME"
 export HOST_SHARE="$(/usr/local/lib/host-run bash -c 'printf "%s" "${XDG_DATA_HOME:-$HOME/.local/share}"')"
+
+export HOST_MIME_DIR="$HOST_SHARE/mime"
+export HOST_ICON_DIR="$HOST_SHARE/icons/hicolor"
+
+export HOST_MIME_FILE="$HOST_MIME_DIR/packages/quartus.xml"
+export HOST_ICON_FILE="$HOST_ICON_DIR/64x64/apps/quartus.png"
 
 export SHARE="$HOME/.local/share"
 export CACHE="$HOME/.cache"
 
 export QUARTUS_DIR="$SHARE/quartus-prime-lite"
 export QUARTUS_INSTALLER_CACHE="$CACHE/quartus-prime-lite"
-
-export QUARTUS_ICON="$SHARE/icons/hicolor/64x64/apps/quartus.png"

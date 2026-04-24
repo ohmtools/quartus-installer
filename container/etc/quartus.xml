@@ -15,12 +15,12 @@
   <mime-type type="application/x-quartus-qpf">
     <comment>Quartus Project File</comment>
     <glob pattern="*.qpf"/>
-    <icon name="application-x-quartus"/>
+    <icon name="quartus"/>
   </mime-type>
 
   <mime-type type="application/x-quartus-vwf">
     <comment>Quartus Vector Waveform File</comment>
     <glob pattern="*.vwf"/>
-    <icon name="application-x-quartus"/>
+    <icon name="quartus"/>
   </mime-type>
 </mime-info>

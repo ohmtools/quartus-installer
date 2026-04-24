@@ -14,8 +14,7 @@
 Name=Quartus Prime Lite
 Comment=FPGA Design Software
 Exec=quartus-launch %f
-# Set by quartus-init
-Icon=
+Icon=quartus
 Terminal=false
 StartupNotify=true
 Type=Application

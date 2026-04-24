@@ -20,7 +20,12 @@ trap 'chown -R "$host_user:$host_group" "$HOME"' EXIT
 
 source /usr/local/lib/dirs.bash
 
-sed -i "s|^Icon=.*|Icon=$QUARTUS_ICON|" /usr/local/share/applications/quartus.desktop
-
 cp -f /usr/local/etc/uninstall "$HOME/uninstall"
 cp -f /usr/local/etc/upgrade "$HOME/upgrade"
+
+# HOST_SHARE path used by HOST_ICON_FILE doesn't work here because host-run doesn't work in init scripts
+HOST_ICON_FILE="$HOST_HOME/.local/share$HOST_ICON_FILE"
+host_icon_file_dir="$(dirname "$HOST_ICON_FILE")"
+mkdir -p "$host_icon_file_dir"
+ln -sf "$QUARTUS_DIR/quartus/adm/quartusii.png" "$HOST_ICON_FILE"
+chown -R "$host_user:$host_group" "$host_icon_file_dir"

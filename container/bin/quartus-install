@@ -172,26 +172,13 @@ select_components() {
   echo "$components"
 }
 
-install_icon() {
-  local icon_file="$QUARTUS_DIR/quartus/adm/quartusii.png"
-  mkdir -p "$(dirname "$QUARTUS_ICON")"
-  ln -sf "$icon_file" "$QUARTUS_ICON"
-
-  local mime_icon="$HOST_SHARE/icons/hicolor/64x64/mimetypes/application-x-quartus.png"
-  local mime_icon_dir="$(dirname "$mime_icon")"
-  mkdir -p "$mime_icon_dir"
-  ln -sf "$QUARTUS_ICON" "$mime_icon"
-  /usr/local/lib/host-run gtk-update-icon-cache "$mime_icon_dir" -f -t
-}
-
 install_mime_type() {
-  local mime_dir="$HOST_SHARE/mime"
-  local mime_file="$mime_dir/packages/quartus.xml"
+  mkdir -p "$(dirname "$HOST_MIME_FILE")"
+  cp -f /usr/local/etc/quartus.xml "$HOST_MIME_FILE"
 
-  mkdir -p "$(dirname "$mime_file")"
-  cp -f /usr/local/etc/quartus.xml "$mime_file"
-
-  /usr/local/lib/host-run update-mime-database "$mime_dir"
+  /usr/local/lib/host-run update-mime-database "$HOST_MIME_DIR" || {
+    >&2 echo "Die MIME Datenbank konnte nicht aktualisiert werden."
+  }
 }
 
 # ─────────────────────────────────────────────
@@ -263,7 +250,9 @@ zenity \
 # ── Step 4: Finish Installation ──────────
 
 install_mime_type
-install_icon
+/usr/local/lib/host-run gtk-update-icon-cache -ft "$HOST_ICON_DIR" || {
+  >&2 echo "Der Icon Cache konnte nicht aktualisiert werden."
+}
 
 notify-send --app-name "$APP_NAME" "Quartus Installation" \
   "Das Programm wurde erfolgreich installiert."

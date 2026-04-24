@@ -22,8 +22,7 @@ assemble:
   distrobox assemble create --file distrobox-local.ini
 
 rebuild:
-  distrobox rm -f quartus-prime-lite-ubuntu
-  podman image rm -i codeberg.org/tobilinz/quartus-installer:latest localhost/quartus-installer:local
+  -distrobox rm -f quartus-prime-lite-ubuntu
   just build
   just assemble
 

@@ -60,15 +60,6 @@ Im Hauptfenster von Quartus Prime Lite:
 
 ====
 
-.*Fehlernachricht `+Error (199013): HDL output file name "..." used with --testbench_file option contains a non-existent directory+`*
-[%collapsible]
-====
-Im Simulationsfenster:
-
-  Simulation > Simulation Settings > Restore Defaults
-
-====
-
 == Upgrade
 
 === Voraussetzungen

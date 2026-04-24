@@ -41,6 +41,11 @@ trap 'rm -f -- "$0"' EXIT
 
 container_home="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOME"')"
 
+mime_dir="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOST_MIME_DIR"')"
+icon_dir="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOST_ICON_DIR"')"
+mime_file="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOST_MIME_FILE"')"
+icon_file="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOST_ICON_FILE"')"
+
 echo "Deinstalliere..."
 echo ""
 
@@ -58,13 +63,9 @@ podman image rm -i codeberg.org/tobilinz/quartus-installer:latest localhost/quar
 docker image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true
 docker image rm localhost/quartus-installer:local 2>/dev/null || true
 
-share="${XDG_DATA_HOME:-$HOME/.local/share}"
-
-icons="$share/icons/hicolor/64x64"
-rm -f "$share/mime/packages/quartus.xml" "$icons/mimetypes/application-x-quartus.png"
-
-update-mime-database "$share/mime"
-gtk-update-icon-cache "$icons" -f -t
+rm -f "$mime_file" "$icon_file"
+update-mime-database "$mime_dir"
+gtk-update-icon-cache -ft "$icon_dir"
 
 if [[ "$resolved_container_home" != "$resolved_home" ]]; then
   rmdir "$container_home"
