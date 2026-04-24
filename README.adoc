@@ -6,7 +6,7 @@ Es richtet außerdem MIME-Unterstützung ein und behebt häufige Fehlerquellen, 
 
 == Installation
 
-=== Vorraussetzungen
+=== Voraussetzungen
 
 * 35GB Speicherplatz (minimum 25GB)
 * Irgendeine Linux-Distribution als Betriebssystem
@@ -71,7 +71,7 @@ Im Simulationsfenster:
 
 == Upgrade
 
-=== Vorraussetzungen
+=== Voraussetzungen
 
 * Der `home` Ordner des Containers wurde bei der Installation nicht geändert
 

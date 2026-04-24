@@ -13,7 +13,7 @@
 
 set -euo pipefail
 
-# For the first arg, $0 can be used in scripts executed from symlinks because the symlink paths will be used.
+# For the first arg of this file, shims (callers) can use $0 because they are executed through symlinks and the symlink paths will be used instead of the shim file paths the symlinks point to.
 target_file="$(/usr/local/lib/shim/get-path "$1")"
 file_name="$1"
 
