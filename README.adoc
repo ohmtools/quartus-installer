@@ -74,7 +74,7 @@ Im Simulationsfenster:
 === Vorraussetzungen
 
 * Der `home` Ordner des Containers wurde bei der Installation nicht geändert
-* `quartus-install` muss vorher mindestens einmal ausgeführt worden sein
+* `quartus-install` wurde mindestens einmal ausgeführt
 
 === Konsole (Host)
 
@@ -84,7 +84,7 @@ Im Simulationsfenster:
 
 === Vorraussetzungen
 
-* `quartus-install` muss vorher mindestens einmal ausgeführt worden sein
+* `quartus-install` wurde mindestens einmal ausgeführt
 
 === Konsole (Host)
 
