@@ -23,7 +23,7 @@ Es richtet außerdem MIME-Unterstützung ein und behebt häufige Fehlerquellen, 
 
 == Häufige Simulationsfehler
 
-.Lizenz fehlt
+=== Lizenz fehlt
 [%collapsible]
 ====
 Beispiele:
@@ -41,7 +41,7 @@ Im Hauptfenster von Quartus Prime Lite:
 ** `Get no-cost licenses` wählen, warten, Häkchen bei erster Lizenz im Pop-Up setzen, `Ok`
 ====
 
-.Fehlernachricht `+Line: 281bus_port->has_type()Stack Trace: 0x1610a: TBO_...+`
+=== Fehlernachricht `+Line: 281bus_port->has_type()Stack Trace: 0x1610a: TBO_...+`
 [%collapsible]
 ====
 Im Hauptfenster von Quartus Prime Lite:
@@ -51,7 +51,7 @@ Im Hauptfenster von Quartus Prime Lite:
 * Die Inputs / Outputs dürfen auch an nichts angeschlossen sein.
 ====
 
-.Fehlernachricht `+Run Analysis and Synthesis ...+`
+=== Fehlernachricht `+Run Analysis and Synthesis ...+`
 [%collapsible]
 ====
 Im Hauptfenster von Quartus Prime Lite:
@@ -60,7 +60,7 @@ Im Hauptfenster von Quartus Prime Lite:
 
 ====
 
-.Fehlernachricht `+Error (199013): HDL output file name "..." used with --testbench_file option contains a non-existent directory+`
+=== Fehlernachricht `+Error (199013): HDL output file name "..." used with --testbench_file option contains a non-existent directory+`
 [%collapsible]
 ====
 Im Simulationsfenster:
