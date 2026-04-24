@@ -6,7 +6,7 @@ Es richtet außerdem MIME-Unterstützung ein und behebt häufige Fehlerquellen, 
 
 == Installation
 
-=== Systemanforderungen
+=== Vorraussetzungen
 
 * 35GB Speicherplatz (minimum 25GB)
 * Irgendeine Linux-Distribution als Betriebssystem
@@ -71,19 +71,25 @@ Im Simulationsfenster:
 
 == Upgrade
 
-Anmerkung: Das automatische Upgrade funktioniert nur, wenn bei der Installation weder der Distrobox Container Name, noch der HOME Ordner verändert wurden.
+Das automatische Upgrade funktioniert nur, wenn bei der Installation der HOME Ordner nicht geändert wurde.
 
-Führe den folgenden Befehl in einem Host-Konsolenfenster aus (`quartus-install` muss vorher mindestens einmal ausgeführt worden sein):
+=== Vorraussetzungen
+
+* `quartus-install` muss vorher mindestens einmal ausgeführt worden sein
+
+=== Konsole (Host)
 
   "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/upgrade" quartus-prime-lite-ubuntu
 
 == Deinstallation
 
-Führe den folgenden Befehl in einem Host-Konsolenfenster aus (`quartus-install` muss vorher mindestens einmal ausgeführt worden sein):
+=== Vorraussetzungen
+
+* `quartus-install` muss vorher mindestens einmal ausgeführt worden sein
+
+=== Konsole (Host)
 
   "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall" quartus-prime-lite-ubuntu
-
-Ohne diesen Befehl wird das Programm nicht vollständig vom System entfernt.
 
 == Entwicklung in diesem Repository
 
