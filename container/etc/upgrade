@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Host container upgrader
+#
+# Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+#
+# This file is part of Quartus Installer.
+#
+# Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+#
+# Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
+# This will only ever be executed directly from the host machine. Never from the container
+
+if [[ -n "$CONTAINER_ID" ]]; then
+  echo "Diese Datei kann nur vom Host-System aus ausgeführt werden." >&2
+  exit 1
+fi
+
+# Different name than CONTAINER_ID because of name collision
+export CONTAINER_NAME="$1"
+
+if [[ -z "$CONTAINER_NAME" ]]; then
+  echo "Usage: $0 <container_id>" >&2
+  exit 1
+fi
+
+echo "Upgrade..."
+echo ""
+
+distrobox rm -f "$CONTAINER_NAME"
+podman image rm -i codeberg.org/tobilinz/quartus-installer:latest localhost/quartus-installer:local 2>/dev/null || true
+docker image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true
+docker image rm localhost/quartus-installer:local 2>/dev/null || true
+
+distrobox assemble create --file "https://codeberg.org/tobilinz/quartus-installer/raw/branch/main/distrobox.ini"
+
+echo ""
+echo "Upgrade abgeschlossen."

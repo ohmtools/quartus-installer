@@ -13,56 +13,69 @@
 
 set -euo pipefail
 
-args=("$@")
-len=${#args[@]}
+compare_arrays() {
+  local -n a1=$1
+  local -n a2=$2
 
-project=""
+  if [[ "${#a1[@]}" -ne "${#a2[@]}" ]]; then
+    return 1
+  fi
 
-for ((i = 0; i < len; i++)); do
-  arg="${args[i]}"
-
-  case "$arg" in
-  --*=* | -*=*)
-    ;;
-  --* | -*)
-    i=$((i + 1))
-    ;;
-  *)
-    project="$arg"
-    break
-    ;;
-  esac
-done
-
-function is_path_flag() {
-  [[ "$1" =~ ^--(vector_source|testbench_file|output_directory)= ]]
-}
-
-if [[ -n $project ]]; then
-  processed_args=()
-
-  for arg in "${args[@]}"; do
-    if is_path_flag "$arg"; then
-      flag="${arg%%=*}"
-      target="${arg#*=}"
-
-      if [[ ! -e $target ]]; then
-        # We don't know how many directories come after $project. So we cant use dirname or realpath
-        relative_path="$(sed "s|.*/$project/|./|" <<<"$target")"
-
-        echo "quartus_eda shim: Absolute $flag path to non-existent file detected. Replacing it with a relative path:"
-        echo "quartus_eda shim: Old absolute path: $target"
-        echo "quartus_eda shim: New relative path: $relative_path"
-        echo ""
-
-        arg="$flag=$relative_path"
-      fi
+  for ((i = 0; i < ${#a1[@]}; i++)); do
+    if [[ "${a1[i]}" != "${a2[i]}" ]]; then
+      return 1
     fi
-
-    processed_args+=("$arg")
   done
 
-  args=("${processed_args[@]}")
+  return 0
+}
+
+function exists_or() {
+  local target=""
+
+  if [[ -e "$1" ]]; then
+    target="$1"
+  else
+    target="$2"
+  fi
+
+  echo "$target"
+}
+
+processed_args=()
+
+args=("$@")
+for ((i = 0; i < ${#args[@]}; i++)); do
+  arg="${args[i]}"
+
+  flag="${arg%%=*}"
+  # Won't work if arg doesn't contain an =, but this is not relevant here.
+  value="${arg#*=}"
+
+  processed_arg=""
+
+  case "$flag" in
+  "--vector_source")
+    processed_arg="$flag=$(exists_or "$value" "./$(basename "$value")")"
+    ;;
+  "--testbench_file")
+    processed_arg="$flag=$(exists_or "$value" "./simulation/qsim/$(basename "$value").vt")"
+    ;;
+  "--output_directory")
+    processed_arg="$flag=$(exists_or "$value" "./simulation/qsim/")"
+    ;;
+  *)
+    processed_arg="$arg"
+    ;;
+  esac
+
+  processed_args+=("$processed_arg")
+done
+
+if ! compare_arrays args processed_args; then
+  echo "quartus_eda shim: Replaced arguments."
+  echo "quartus_eda shim: Old arguments: ${args[*]}"
+  echo "quartus_eda shim: New arguments: ${processed_args[*]}"
 fi
 
-exec /usr/local/lib/shim/call-target "$0" "${args[@]}"
+exec /usr/local/lib/shim/call-target "$0" "${processed_args[@]}"

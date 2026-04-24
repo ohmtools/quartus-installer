@@ -19,7 +19,7 @@ len=${#args[@]}
 FILE_NAME=""
 DO_INDEX=-1
 for ((i = 0; i < len; i++)); do
-  if [[ ${args[i]} == "-do" ]]; then
+  if [[ "${args[i]}" == "-do" ]]; then
     if ((i + 1 < len)); then
       FILE_NAME="${args[i + 1]}"
       DO_INDEX=$((i + 1))
@@ -28,7 +28,7 @@ for ((i = 0; i < len; i++)); do
   fi
 done
 
-if [[ -z $FILE_NAME || ! -f "./$FILE_NAME" ]]; then
+if [[ -z "$FILE_NAME" || ! -f "./$FILE_NAME" ]]; then
   echo "vsim shim: Could not find the file referenced by -do. No fixes will be applied."
   exec /usr/local/lib/shim/call-target "$0" "$@"
 fi
@@ -38,14 +38,14 @@ trap 'rm -f -- "$SHIM_FILE"' EXIT
 
 # Only does basic processing and doesn't properly parse things like blocks and functions. But thats good enough for now
 >"$SHIM_FILE"
-while IFS= read -r line || [[ -n $line ]]; do
-  if [[ $line =~ ^vsim[[:space:]] ]]; then
+while IFS= read -r line || [[ -n "$line" ]]; do
+  if [[ "$line" =~ ^vsim[[:space:]] ]]; then
     DELIMITER=$'\x1E'
     mapfile -td "$DELIMITER" line_args < <(xargs printf "%s$DELIMITER" <<<"$line")
 
     processed_args=()
     for arg in "${line_args[@]}"; do
-      if [[ $arg = "-novopt" ]]; then
+      if [[ "$arg" = "-novopt" ]]; then
         echo "vsim shim: Deprecated '-novopt' flag detected. Replacing it with '-voptargs=+acc'"
         echo ""
 
@@ -57,7 +57,7 @@ while IFS= read -r line || [[ -n $line ]]; do
 
     reconstructed=""
     for parg in "${processed_args[@]}"; do
-      if [[ $parg == *" "* ]]; then
+      if [[ "$parg" == *" "* ]]; then
         reconstructed+=" \"$parg\""
       else
         reconstructed+=" $parg"

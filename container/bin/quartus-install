@@ -16,10 +16,11 @@ set -euo pipefail
 source /usr/local/lib/dirs.bash
 
 # ─────────────────────────────────────────────
-# Uninstaller
+# Host Executables
 # ─────────────────────────────────────────────
 
 cp /usr/local/etc/uninstall "$CONTAINER_HOME/uninstall"
+cp /usr/local/etc/upgrade "$CONTAINER_HOME/upgrade"
 
 # ─────────────────────────────────────────────
 # Configuration
@@ -68,9 +69,9 @@ pick_installer_file() {
       >&2 echo "An error occurred in the native file picker. Falling back to Zenity."
 
       local zenity_dir="/"
-      if [[ -d $HOST_HOME/Downloads/ ]]; then
+      if [[ -d "$HOST_HOME/Downloads/" ]]; then
         zenity_dir="$HOST_HOME/Downloads"
-      elif [[ -d $HOST_HOME ]]; then
+      elif [[ -d "$HOST_HOME" ]]; then
         zenity_dir="$HOST_HOME"
       fi
 
@@ -112,7 +113,7 @@ download_installer() {
   local downloaded_installer_path
   downloaded_installer_path="$(pick_installer_file)"
 
-  if [[ -z $downloaded_installer_path ]]; then
+  if [[ -z "$downloaded_installer_path" ]]; then
     zenity --title "Fehler" --error --text "Du hast keine valide Datei ausgewählt." 2>/dev/null
     exit 1
   fi
@@ -122,7 +123,7 @@ download_installer() {
     cp_failed="true"
   }
 
-  if [[ $cp_failed == "true" ]]; then
+  if [[ "$cp_failed" == "true" ]]; then
     zenity --title "Fehler" --error --text "Die Installer Datei konnte nicht kopiert werden." 2>/dev/null
     exit 1
   fi
@@ -155,7 +156,7 @@ select_components() {
     exit 1
   }
 
-  if [[ -z $components ]]; then
+  if [[ -z "$components" ]]; then
     components="$(
       echo "$component_list" |
         grep -E "^Default (components|devices):" |
@@ -166,7 +167,7 @@ select_components() {
 
   components="$(echo "$components" | tr -d ' ' | tr '[:upper:]' '[:lower:]')"
 
-  if [[ -z $components ]]; then
+  if [[ -z "$components" ]]; then
     zenity \
       --title "Fehler" \
       --error \
@@ -199,7 +200,7 @@ install_mime_type() {
 
   mkdir -p "$mime_icon_dir"
 
-  if [[ -e $icon_file ]]; then
+  if [[ -e "$icon_file" ]]; then
     cp -f "$icon_file" "$mime_icon_path"
   fi
 
@@ -222,7 +223,7 @@ installer_file="$CACHE/quartus-prime-lite-installer"
 # ── Step 1: Obtain the installer .run file ────
 
 skip_download="false"
-if [[ -f $installer_file ]]; then
+if [[ -f "$installer_file" ]]; then
   # Ask whether to re-download; skip if the user says no
   zenity \
     --title "Installer herunterladen?" \
@@ -233,11 +234,11 @@ if [[ -f $installer_file ]]; then
     skip_download="true"
 fi
 
-if [[ $skip_download = "false" ]]; then
+if [[ "$skip_download" = "false" ]]; then
   download_installer
 fi
 
-if [[ ! -f $installer_file ]]; then
+if [[ ! -f "$installer_file" ]]; then
   zenity \
     --title "Fehler" \
     --error \

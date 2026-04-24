@@ -22,9 +22,14 @@ assemble:
   distrobox assemble create --file distrobox-local.ini
 
 rebuild:
-  -quartus-uninstall | xargs -d '\n' "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall"
+  podman image rm -i codeberg.org/tobilinz/quartus-installer:latest localhost/quartus-installer:local
   just build
   just assemble
+
+full-rebuild:
+  -"${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall" quartus-prime-lite-ubuntu
+  just rebuild
+
 
 [no-cd]
 push-cicd version:

@@ -59,11 +59,20 @@ Im Simulationsfenster:
 
   Simulation > Simulation Settings > Restore Defaults
 
+== Upgrade
+
+Anmerkung: Das automatische Upgrade funktioniert nur, wenn bei der Installation weder der Distrobox Container Name, noch der HOME Ordner verändert wurden.
+
+
+Führe den folgenden Befehl in einem Host-Konsolenfenster aus (`quartus-install` muss vorher mindestens einmal ausgeführt worden sein):
+
+  "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/upgrade" quartus-prime-lite-ubuntu
+
 == Deinstallation
 
 Führe den folgenden Befehl in einem Host-Konsolenfenster aus (`quartus-install` muss vorher mindestens einmal ausgeführt worden sein):
 
-  quartus-uninstall | xargs -d '\n' "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall"
+  "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall" quartus-prime-lite-ubuntu
 
 Ohne diesen Befehl wird das Programm nicht vollständig vom System entfernt.
 
@@ -91,12 +100,17 @@ WICHTIG: Dieses Projekt steht in *keiner* Verbindung zu der Intel Corporation, A
 
 This project simplifies the software installation and usage of "Quartus Prime Lite".
 
+
 Copyright (C) 2026  Tobias Linz <contact@tobilinz.de>
+
 
 This file is part of Quartus Installer.
 
+
 Quartus Installer is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
+
 Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
 
 You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.

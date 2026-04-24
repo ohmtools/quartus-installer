@@ -13,37 +13,49 @@
 
 # This will only ever be executed directly from the host machine. Never from the container
 
-if [[ -n $CONTAINER_ID ]]; then
+if [[ -n "$CONTAINER_ID" ]]; then
   echo "Diese Datei kann nur vom Host-System aus ausgeführt werden." >&2
   exit 1
 fi
 
 # Different name than CONTAINER_ID because of name collision
 export CONTAINER_NAME="$1"
-export CONTAINER_HOME="$2"
 
-if [[ -z $CONTAINER_NAME || -z $CONTAINER_HOME ]]; then
-  echo "Usage: $0 <container_id> <container_home>" >&2
+if [[ -z "$CONTAINER_NAME" ]]; then
+  echo "Usage: $0 <container_id>" >&2
   exit 1
 fi
 
 script_path="$(realpath "$0")"
 
-if [[ $script_path != "/tmp/"* ]]; then
+if [[ "$script_path" != "/tmp/"* ]]; then
   temp_script="$(mktemp /tmp/uninstall.XXXXXX.sh)"
   cp "$script_path" "$temp_script"
   chmod +x "$temp_script"
   exec "$temp_script" "$@"
+  echo "exec failed" >&2
+  exit 1
 fi
 
 trap 'rm -f -- "$0"' EXIT
 
+container_home="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$CONTAINER_HOME"')"
+
 echo "Deinstalliere..."
 echo ""
+
+resolved_container_home="$(realpath "$container_home")"
+resolved_home="$(realpath "$HOME")"
+if [[ "$resolved_container_home" != "$resolved_home" ]]; then
+  # Delete files from within the container with sudo first because that will avoid permission issues on the host system.
+  # $container_home itself cannot be deleted because the container still uses it.
+  distrobox-enter -n "$CONTAINER_ID" -- bash -c 'sudo find "$1" -mindepth 1 -delete' -- "$container_home"
+fi
 
 distrobox rm -f "$CONTAINER_NAME"
 podman image rm -i codeberg.org/tobilinz/quartus-installer:latest localhost/quartus-installer:local 2>/dev/null || true
 docker image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true
+docker image rm localhost/quartus-installer:local 2>/dev/null || true
 
 share="${XDG_DATA_HOME:-$HOME/.local/share}"
 
@@ -51,11 +63,8 @@ rm -f "$share/mime/packages/quartus.xml" "$share/icons/hicolor/64x64/mimetypes/a
 update-mime-database "$share/mime"
 gtk-update-icon-cache "$share/icons/hicolor" -f -t
 
-if [[ $(realpath "$CONTAINER_HOME") == $(realpath "$HOME") ]]; then
-  echo "Die Deinstallation würde den HOME Ordner des aktuellen Benutzers löschen. Abgebrochen." >&2
-  exit 1
-else
-  rm -rf "$CONTAINER_HOME"
+if [[ "$resolved_container_home" != "$resolved_home" ]]; then
+  rmdir "$container_home"
 fi
 
 echo ""

@@ -27,18 +27,18 @@ while IFS= read -r -d '' shim_file; do
   quartus_file="$QUARTUS_DIR/$relative_shim_file"
   target_file="$(/usr/local/lib/shim/get-path "$quartus_file")"
 
-  if [[ -L $quartus_file ]]; then
+  if [[ -L "$quartus_file" ]]; then
     echo "File is a symlink."
 
     symlink_target="$(readlink -f "$quartus_file")"
-    if [[ $symlink_target == $shim_file ]]; then
+    if [[ "$symlink_target" == "$shim_file" ]]; then
       echo "File is already shimmed."
 
       continue
     fi
 
     ln -snf "$symlink_target" "$target_file"
-  elif [[ ! -e $quartus_file ]]; then
+  elif [[ ! -e "$quartus_file" ]]; then
     echo "File '$quartus_file' not found."
     continue
   else
