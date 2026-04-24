@@ -71,10 +71,9 @@ Im Simulationsfenster:
 
 == Upgrade
 
-Das automatische Upgrade funktioniert nur, wenn bei der Installation der HOME Ordner nicht geändert wurde.
-
 === Vorraussetzungen
 
+* Der `home` Ordner des Containers wurde bei der Installation nicht geändert
 * `quartus-install` muss vorher mindestens einmal ausgeführt worden sein
 
 === Konsole (Host)
