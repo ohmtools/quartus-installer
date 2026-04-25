@@ -65,9 +65,9 @@ Im Hauptfenster von Quartus Prime Lite:
 ====
 Im Dateimanager die Datei 
 
-[subs="quotes"]
+[subs="macros,quotes"]
 ----
-+.../simulation/qsim/___.vwf.vt+*.vt*
+pass:[+.../simulation/qsim/___.vwf.vt+*].vt*
 ----
 
 zu
