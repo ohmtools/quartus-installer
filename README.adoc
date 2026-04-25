@@ -14,7 +14,7 @@ Es richtet außerdem MIME-Unterstützung ein und behebt häufige Fehlerquellen, 
 ** Am besten über den Paketmanager der jeweiligen Distribution installieren
 ** Falls eine Auswahl auftaucht, in der `podman` zur Wahl steht, `podman` auswählen
 
-=== Konsole
+=== Automatisch (Host-Konsole)
 
 . `+distrobox assemble create --file "https://codeberg.org/tobilinz/quartus-installer/raw/branch/main/distrobox.ini"+`
 . `quartus-install`
@@ -86,17 +86,26 @@ umbenennen. (letztes `.vt` entfernen)
 
 * Der `home` Ordner des Containers wurde bei der Installation nicht geändert
 
-=== Konsole (Host)
+=== Automatisch (Host-Konsole)
 ----
 "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/upgrade" quartus-prime-lite-ubuntu
 ----
 
 == Deinstallation
 
-=== Konsole (Host)
+=== Automatisch (Host-Konsole)
 ----
 "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall" quartus-prime-lite-ubuntu
 ----
+
+=== Manuell
+
+. In der Host Konsole: `distrobox rm -f "quartus-prime-lite-ubuntu" 2>/dev/null`
+. Den Ordner namens `quartus-prime-lite`, bzw. `quartus-prime-lite-ubuntu` in `~/.local/share` löschen (*niemals `~/.local/share` selbst löschen!*)
+. Sämtliche Dateien, die `quartus` im Namen enthalten in `~/.local/share/mime` löschen (auch Unterordner prüfen)
+. Sämtliche Dateien, die `quartus` im Namen enthalten in `~/.local/share/icons/hicolor/64x64` löschen (auch Unterordner prüfen)
+. `+update-mime-database "~/.local/share/mime"+`
+. `+gtk-update-icon-cache -ft "~/.local/share/icons/hicolor"+`
 
 == Entwicklung in diesem Repository
 
