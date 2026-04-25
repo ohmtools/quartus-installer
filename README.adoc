@@ -21,7 +21,7 @@ Es richtet außerdem MIME-Unterstützung ein und behebt häufige Fehlerquellen, 
 . Den Anweisungen folgen
   * Studenten der TH-Nürnberg sollten mindestens `quartus,questa_fse,cyclone` installieren 
 
-== Häufige Simulationsfehler
+== Häufige Fehler
 
 .*Lizenz fehlt*
 [%collapsible]
@@ -41,7 +41,7 @@ Im Hauptfenster von Quartus Prime Lite:
 ** `Get no-cost licenses` wählen, warten, Häkchen bei erster Lizenz im Pop-Up setzen, `Ok`
 ====
 
-.*Fehlernachricht `+Line: 281bus_port->has_type()Stack Trace: 0x1610a: TBO_...+`*
+.*Simulationsfehler `+Line: 281bus_port->has_type()Stack Trace: 0x1610a: TBO_...+`*
 [%collapsible]
 ====
 Im Hauptfenster von Quartus Prime Lite:
@@ -51,13 +51,42 @@ Im Hauptfenster von Quartus Prime Lite:
 * Die Inputs / Outputs dürfen auch an nichts angeschlossen sein.
 ====
 
-.*Fehlernachricht `+Run Analysis and Synthesis ...+`*
+.*Simulationsfehler `+Run Analysis and Synthesis ...+`*
 [%collapsible]
 ====
 Im Hauptfenster von Quartus Prime Lite:
-
+----
   Processing > Start Compilation
+----
+====
 
+.*Simulationsfehler `+Run Analysis and Synthesis ...+`*
+[%collapsible]
+====
+Im Hauptfenster von Quartus Prime Lite:
+----
+Processing > Start Compilation
+----
+====
+
+.*Simulationsfehler `+Unable to open .../simulation/qsim/___.vwf.vt+`*
+[%collapsible]
+====
+Im Dateimanager die Datei 
+
+[subs="quotes"]
+----
++.../simulation/qsim/___.vwf.vt+*.vt*
+----
+
+zu
+  
+[subs="quotes"]
+----
++.../simulation/qsim/___.vwf.vt+
+----
+
+umbenennen.
 ====
 
 == Upgrade
@@ -67,14 +96,16 @@ Im Hauptfenster von Quartus Prime Lite:
 * Der `home` Ordner des Containers wurde bei der Installation nicht geändert
 
 === Konsole (Host)
-
-  "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/upgrade" quartus-prime-lite-ubuntu
+----
+"${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/upgrade" quartus-prime-lite-ubuntu
+----
 
 == Deinstallation
 
 === Konsole (Host)
-
-  "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall" quartus-prime-lite-ubuntu
+----
+"${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall" quartus-prime-lite-ubuntu
+----
 
 == Entwicklung in diesem Repository
 
@@ -110,3 +141,4 @@ Quartus Installer is free software: you can redistribute it and/or modify it und
 Quartus Installer is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along with Quartus Installer. If not, see <https://www.gnu.org/licenses/>.
+
