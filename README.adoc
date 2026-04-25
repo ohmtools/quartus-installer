@@ -67,14 +67,15 @@ Im Dateimanager die Datei
 
 [subs="macros,quotes"]
 ----
-pass:[+.../simulation/qsim/___.vwf.vt+*].vt*
+pass:[+.../simulation/qsim/___.vwf.vt+*]*.vt*
 ----
 
 zu
   
-[subs="quotes"]
+[subs="macros,quotes"]
 ----
 +.../simulation/qsim/___.vwf.vt+
+pass:[+.../simulation/qsim/___.vwf.vt+]
 ----
 
 umbenennen.
