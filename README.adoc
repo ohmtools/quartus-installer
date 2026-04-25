@@ -104,8 +104,8 @@ umbenennen. (letztes `.vt` entfernen)
 . Den Ordner namens `quartus-prime-lite`, bzw. `quartus-prime-lite-ubuntu` in `~/.local/share` löschen (*niemals `~/.local/share` selbst löschen!*)
 . Sämtliche Dateien, die `quartus` im Namen enthalten in `~/.local/share/mime` löschen (auch Unterordner prüfen)
 . Sämtliche Dateien, die `quartus` im Namen enthalten in `~/.local/share/icons/hicolor/64x64` löschen (auch Unterordner prüfen)
-. `+update-mime-database "$HOME/.local/share/mime"+`
-. `+gtk-update-icon-cache -ft "$HOME/.local/share/icons/hicolor"+`
+. In der Host Konsole: `+update-mime-database "$HOME/.local/share/mime"+`
+. In der Host Konsole: `+gtk-update-icon-cache -ft "$HOME/.local/share/icons/hicolor"+`
 
 == Entwicklung in diesem Repository
 
