@@ -67,7 +67,7 @@ Im Dateimanager die Datei
 
 [subs="macros,quotes"]
 ----
-pass:[.../simulation/qsim/___.vwf.vt]*.vt*
++.../simulation/qsim/___.vwf.vt+*.vt*
 ----
 
 zu
@@ -77,7 +77,7 @@ zu
 +.../simulation/qsim/___.vwf.vt+
 ----
 
-umbenennen.
+umbenennen. (letztes `.vt` entfernen)
 ====
 
 == Upgrade
