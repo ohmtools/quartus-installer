@@ -98,7 +98,7 @@ umbenennen. (letztes `.vt` entfernen)
 "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall" quartus-prime-lite-ubuntu
 ----
 
-=== Manuell
+=== Manuell (Host-System)
 
 . In der Host Konsole: `distrobox rm -f "quartus-prime-lite-ubuntu" 2>/dev/null`
 . Den Ordner namens `quartus-prime-lite`, bzw. `quartus-prime-lite-ubuntu` in `~/.local/share` löschen (*niemals `~/.local/share` selbst löschen!*)
