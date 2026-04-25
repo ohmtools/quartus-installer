@@ -60,15 +60,6 @@ Im Hauptfenster von Quartus Prime Lite:
 ----
 ====
 
-.*Simulationsfehler `+Run Analysis and Synthesis ...+`*
-[%collapsible]
-====
-Im Hauptfenster von Quartus Prime Lite:
-----
-Processing > Start Compilation
-----
-====
-
 .*Simulationsfehler `+Unable to open .../simulation/qsim/___.vwf.vt+`*
 [%collapsible]
 ====
