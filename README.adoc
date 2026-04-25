@@ -91,6 +91,14 @@ umbenennen. (letztes `.vt` entfernen)
 "${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/upgrade" quartus-prime-lite-ubuntu
 ----
 
+=== Manuell (Host-System)
+
+. `+distrobox rm -f "quartus-prime-lite-ubuntu"+`
+. `+podman image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true+`
+. `+docker image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true+`
+. `+distrobox assemble create --file "${2:-"https://codeberg.org/tobilinz/quartus-installer/raw/branch/main/distrobox.ini"}"+`
+
+
 == Deinstallation
 
 === Automatisch (Host-Konsole)
@@ -100,12 +108,14 @@ umbenennen. (letztes `.vt` entfernen)
 
 === Manuell (Host-System)
 
-. In der Host Konsole: `distrobox rm -f "quartus-prime-lite-ubuntu" 2>/dev/null`
+. `+distrobox rm -f "quartus-prime-lite-ubuntu" 2>/dev/null+`
+. `+podman image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true+`
+. `+docker image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true+`
 . Den Ordner namens `quartus-prime-lite`, bzw. `quartus-prime-lite-ubuntu` in `~/.local/share` löschen (*niemals `~/.local/share` selbst löschen!*)
 . Sämtliche Dateien, die `quartus` im Namen enthalten in `~/.local/share/mime` löschen (auch Unterordner prüfen)
 . Sämtliche Dateien, die `quartus` im Namen enthalten in `~/.local/share/icons/hicolor/64x64` löschen (auch Unterordner prüfen)
-. In der Host Konsole: `+update-mime-database "$HOME/.local/share/mime"+`
-. In der Host Konsole: `+gtk-update-icon-cache -ft "$HOME/.local/share/icons/hicolor"+`
+. `+update-mime-database "$HOME/.local/share/mime"+`
+. `+gtk-update-icon-cache -ft "$HOME/.local/share/icons/hicolor"+`
 
 == Entwicklung in diesem Repository
 
