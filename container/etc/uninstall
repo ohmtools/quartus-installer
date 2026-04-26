@@ -39,7 +39,7 @@ fi
 
 trap 'rm -f -- "$0"' EXIT
 
-container_home="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOME"')"
+container_home="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'echo "$HOME"')"
 
 mime_dir="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOST_MIME_DIR"')"
 icon_dir="$(distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'source /usr/local/lib/dirs.bash && echo "$HOST_ICON_DIR"')"
@@ -51,10 +51,10 @@ echo ""
 
 resolved_container_home="$(realpath "$container_home")"
 resolved_home="$(realpath "$HOME")"
-if [[ "$resolved_container_home" != "$resolved_home" ]]; then
+if [[ "$resolved_container_home" != "$resolved_home" && -n "$resolved_container_home" ]]; then
   # Delete files from within the container with sudo first because that will avoid permission issues on the host system.
   # $container_home itself cannot be deleted because the container still uses it.
-  distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'sudo find "$1" -mindepth 1 -delete' -- "$container_home"
+  distrobox-enter -n "$CONTAINER_NAME" -- bash -c 'sudo find "$1" -mindepth 1 -delete' -- "$resolved_container_home"
 fi
 
 # Suppress misleading find warning
@@ -67,8 +67,8 @@ rm -f "$mime_file" "$icon_file"
 update-mime-database "$mime_dir"
 gtk-update-icon-cache -ft "$icon_dir"
 
-if [[ "$resolved_container_home" != "$resolved_home" ]]; then
-  rmdir "$container_home"
+if [[ "$resolved_container_home" != "$resolved_home" && -n "$resolved_container_home" ]]; then
+  rmdir "$resolved_container_home"
 fi
 
 echo ""
