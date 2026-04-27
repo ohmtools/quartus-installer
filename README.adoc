@@ -80,6 +80,15 @@ zu
 umbenennen. (letztes `.vt` entfernen)
 ====
 
+.*Simulationsfehler `+Error: (vcom-7) Failed to open design unit file "___.vwf.vht" in read mode.+`*
+[%collapsible]
+====
+Im Simulationsfenster von Quartus Prime Lite:
+----
+Simulation > Simulation Settings > HDL Language: Verilog
+----
+====
+
 == Upgrade
 
 === Voraussetzungen
