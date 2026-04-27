@@ -70,6 +70,7 @@ Simulation > Simulation Settings > HDL Language: Verilog
 ====
 
 .*Simulationsfehler `+file ... does not existError+`*
+[%collapsible]
 ====
 Im Simulationsfenster:
 ----
