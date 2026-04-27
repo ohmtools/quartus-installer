@@ -59,7 +59,7 @@ for ((i = 0; i < ${#args[@]}; i++)); do
     processed_arg="$flag=$(exists_or "$value" "./$(basename "$value")")"
     ;;
   "--testbench_file")
-    processed_arg="$flag=$(exists_or "$value" "./simulation/qsim/$(basename "$value").vt")"
+    processed_arg="$flag=$(exists_or "$value" "./simulation/qsim/$(basename "$value")")"
     ;;
   "--output_directory")
     processed_arg="$flag=$(exists_or "$value" "./simulation/qsim/")"
