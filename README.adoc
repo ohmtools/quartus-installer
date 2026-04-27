@@ -33,7 +33,7 @@ Beispiele:
 * `Error: Failure to obtain a Verilog simulation license`
 * `Error: Failure to obtain a VHDL simulation license`
 
-Im Hauptfenster von Quartus Prime Lite:
+Im Hauptfenster:
 
 . In der oberen Toolbar `+Tools > License Setup..+` wählen
 . Im `Options` Fenster, das sich geöffnet hat, folgendes tun:
@@ -44,7 +44,7 @@ Im Hauptfenster von Quartus Prime Lite:
 .*Simulationsfehler `+Line: 281bus_port->has_type()Stack Trace: 0x1610a: TBO_...+`*
 [%collapsible]
 ====
-Im Hauptfenster von Quartus Prime Lite:
+Im Hauptfenster:
 
 * Bei den Verwendeten Inputs / Outputs im Schaltplan gibt es Lücken (z.B. LEDR[0..5] und LEDR[9] => Lücke von LEDR[6..8]). 
 * Zum Beheben, Inputs / Outputs platzieren, die diese Lücken verwenden. 
@@ -54,7 +54,7 @@ Im Hauptfenster von Quartus Prime Lite:
 .*Simulationsfehler `+Run Analysis and Synthesis ...+`*
 [%collapsible]
 ====
-Im Hauptfenster von Quartus Prime Lite:
+Im Hauptfenster:
 ----
   Processing > Start Compilation
 ----
@@ -63,9 +63,17 @@ Im Hauptfenster von Quartus Prime Lite:
 .*Simulationsfehler `+Error: (vcom-7) Failed to open design unit file "___.vwf.vht" in read mode.+`*
 [%collapsible]
 ====
-Im Simulationsfenster von Quartus Prime Lite:
+Im Simulationsfenster:
 ----
 Simulation > Simulation Settings > HDL Language: Verilog
+----
+====
+
+.*Simulationsfehler `+file ... does not existError+`*
+====
+Im Simulationsfenster:
+----
+Simulation > Simulation Settings > Restore Defaults
 ----
 ====
 
