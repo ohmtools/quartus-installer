@@ -193,7 +193,10 @@ echo ""
 
 installer_file="$CACHE/quartus-prime-lite-installer"
 
-# ── Step 1: Obtain the installer .run file ────
+# ── Step 1: Create necessary directoris ───────
+mkdir -p "$SHARE" "$CACHE" "$QUARTUS_DIR" "$QUARTUS_INSTALLER_CACHE"
+
+# ── Step 2: Obtain the installer .run file ────
 
 skip_download="false"
 if [[ -f "$installer_file" ]]; then
@@ -222,7 +225,7 @@ fi
 
 chmod +x "$installer_file"
 
-# ── Step 2: Select components ─────────────────
+# ── Step 3: Select components ─────────────────
 
 echo "Bitte warten. Ein neues Pop-Up öffnet sich gleich."
 
@@ -230,7 +233,7 @@ installer=("$installer_file" --quiet --)
 
 components="$(select_components)"
 
-# ── Step 3: Run the installer ─────────────────
+# ── Step 4: Run the installer ─────────────────
 
 zenity \
   --title "Installation starten?" \
@@ -247,7 +250,7 @@ zenity \
   --install-dir "$QUARTUS_DIR" \
   --components "$components"
 
-# ── Step 4: Finish Installation ──────────
+# ── Step 5: Finish Installation ──────────
 
 install_mime_type
 /usr/local/lib/host-run gtk-update-icon-cache -ft "$HOST_ICON_DIR" || {
