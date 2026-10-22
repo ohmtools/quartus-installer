@@ -23,6 +23,12 @@ Es richtet außerdem MIME-Unterstützung ein und behebt häufige Fehlerquellen, 
 
 == Häufige Fehler
 
+.*Installation finished with error*
+[%collapsible]
+====
+Bei der Installation war nicht mehr genug Speicherplatz frei.
+====
+
 .*Lizenz fehlt*
 [%collapsible]
 ====
