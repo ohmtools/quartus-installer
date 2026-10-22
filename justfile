@@ -29,27 +29,3 @@ rebuild:
 full-rebuild:
   -"${XDG_DATA_HOME:-$HOME/.local/share}/quartus-prime-lite/uninstall" quartus-prime-lite-ubuntu
   just rebuild
-
-
-[no-cd]
-push-cicd version:
-  #!/usr/bin/env bash
-  set -euo pipefail
-
-  cleanup() {
-    podman rmi amd64-tmp arm64-tmp || true
-    podman manifest rm quartus-installer-cicd:latest || true
-  }
-  trap cleanup EXIT
-
-  podman manifest create quartus-installer-cicd:latest
-
-  podman build --platform linux/amd64 -f Containerfile.cicd -t amd64-tmp .
-  podman manifest add quartus-installer-cicd:latest containers-storage:localhost/amd64-tmp
-
-  podman build --platform linux/arm64 -f Containerfile.cicd -t arm64-tmp .
-  podman manifest add quartus-installer-cicd:latest containers-storage:localhost/arm64-tmp
-
-  podman manifest push quartus-installer-cicd:latest docker://codeberg.org/tobilinz/quartus-installer-cicd:{{version}}
-  podman manifest push quartus-installer-cicd:latest docker://codeberg.org/tobilinz/quartus-installer-cicd:latest
-

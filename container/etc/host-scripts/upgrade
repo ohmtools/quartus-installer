@@ -30,11 +30,12 @@ echo "Upgrade..."
 echo ""
 
 distrobox rm -f "$CONTAINER_NAME"
-podman image rm -i codeberg.org/tobilinz/quartus-installer:latest localhost/quartus-installer:local 2>/dev/null || true
+podman image rm -i ghcr.io/ohmtools/quartus-installer:latest codeberg.org/tobilinz/quartus-installer:latest localhost/quartus-installer:local 2>/dev/null || true
+docker image rm ghcr.io/ohmtools/quartus-installer:latest 2>/dev/null || true
 docker image rm codeberg.org/tobilinz/quartus-installer:latest 2>/dev/null || true
 docker image rm localhost/quartus-installer:local 2>/dev/null || true
 
-distrobox assemble create --file "${2:-"https://codeberg.org/tobilinz/quartus-installer/raw/branch/main/distrobox.ini"}"
+distrobox assemble create --file "${2:-"https://raw.githubusercontent.com/ohmtools/quartus-installer/main/distrobox.ini"}"
 
 echo ""
 echo "Upgrade abgeschlossen."

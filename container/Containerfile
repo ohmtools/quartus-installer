@@ -12,7 +12,7 @@
 
 FROM quay.io/toolbx/ubuntu-toolbox:24.04
 
-LABEL org.opencontainers.image.source="https://codeberg.org/tobilinz/quartus-installer"
+LABEL org.opencontainers.image.source="https://github.com/ohmtools/quartus-installer"
 LABEL org.opencontainers.image.description="Environment for simplifying the software installation and usage of \"Quartus Prime Lite\""
 
 RUN <<EOF
