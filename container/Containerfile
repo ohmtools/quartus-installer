@@ -21,7 +21,8 @@ set -e
 apt-get update
 
 # Locale
-apt-get install -y --no-install-recommends locales=2.39-0ubuntu8.7
+# Not pinned: tracks glibc security updates, superseded versions get removed from the archive
+apt-get install -y --no-install-recommends locales
 sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
 sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
 locale-gen
